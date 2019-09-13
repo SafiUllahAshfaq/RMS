@@ -1,5 +1,5 @@
-RMS/BK/node_modules/
-RMS/BK/package-lock.json
+BK/node_modules/
+BK/package-lock.json
 
-RMS/FE/node_modules/
-RMS/FE/package-lock.json
+FE/node_modules/
+FE/package-lock.json
