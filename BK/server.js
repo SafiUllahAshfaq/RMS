@@ -1,5 +1,5 @@
 const Koa = require('koa');
-const bodyParser = require('koa-bodyparser')();
+const koaBody = require('koa-body');
 const Router = require('koa-router');
 // const cors = require('@koa/cors')(/* Add your cors option */);
 require('./config/database');
@@ -17,7 +17,12 @@ server.use(logger);
 
 server
   .use(errorHandler)
-  .use(bodyParser)
+  .use(
+    koaBody({
+      multipart: true,
+      urlencoded: true
+    })
+  )
   .use(candidate.routes())
   .use(router.allowedMethods());
 
