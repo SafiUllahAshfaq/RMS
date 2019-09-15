@@ -7,7 +7,9 @@ const router = require('koa-router')({
 
 router
   .get('/allevaluations', controller.getAllEvaluations)
-  .get('/evaluation/:candidateId', controller.evaluation)
-  .post('/postevaluation', controller.postEvaluation);
+  .get('/getEvaluation/:id', controller.getEvaluation)
+  .patch('/updateevaluation', controller.updateEvaluation)
+  .post('/postevaluation', controller.postEvaluation)
+  .delete('/deleteevaluation/:id', controller.deleteEvaluation);
 
 module.exports = router;
