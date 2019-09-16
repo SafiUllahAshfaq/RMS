@@ -278,7 +278,7 @@
                         <button mat-raised-button class="upload-button mat-basic" type="button" (click)="fileInput.click()">
                             Upload File
                         </button>
-                        <!-- <div class="upload-info" *ngIf="file_info.file_name">{{ file_info.file_name }} ({{ file_info.file_size }})</div> -->
+                        <div class="upload-info" *ngIf="resumeInfo.file_name">{{ resumeInfo.file_name }} ({{ resumeInfo.file_size }})</div>
                     </div>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
@@ -352,10 +352,10 @@
                     <div class="w-100">
                         <label class="label-margin">Recommendation: </label>
                         <mat-radio-group formControlName="recommendation">
-                            <mat-radio-button class="label-margin" value="0" [checked]="true">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin" value="4">Good</mat-radio-button>
+                            <mat-radio-button class="label-margin" value="0" [checked]="true">Recommended</mat-radio-button>
+                            <mat-radio-button class="label-margin" value="1">Not Recommended</mat-radio-button>
+                            <mat-radio-button class="label-margin" value="3">Hold for Future</mat-radio-button>
+                            <mat-radio-button class="label-margin" value="4">Re evaluate</mat-radio-button>
                         </mat-radio-group>
                         <mat-error *ngIf="formErrors.recommendation.required">
                             Recommendation is required!

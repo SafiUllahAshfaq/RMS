@@ -84,6 +84,10 @@ export class AddRecruitmentComponent implements OnInit {
 
   recruitmentForm: FormGroup;
   formErrors: any;
+  resumeInfo: any = {};
+  uploaded_files: any = [];
+  resumeUploaded: boolean = false;
+  imageUploaded: boolean = false;
 
   onFormValuesChanged() {
     for (const field in this.formErrors) {
@@ -102,6 +106,31 @@ export class AddRecruitmentComponent implements OnInit {
 
   addRecruitment(){
     console.log(this.recruitmentForm.value);
+  }
+
+  uploadFile(event) {
+    if (event.target.files[0]) {
+      let name_length = event.target.files[0].name.length;
+      let file_size = event.target.files[0].size / 1000000;
+
+      if (name_length <= 30 && file_size <= 50) {
+        this.resumeUploaded = true;
+        this.imageUploaded = false;
+
+        this.resumeInfo.file_src = URL.createObjectURL(event.target.files[0]);
+        this.resumeInfo.file_type = event.target.files[0].type;
+        this.resumeInfo.file_name = event.target.files[0].name;
+        this.resumeInfo.file_size = file_size;
+
+        this.uploaded_files = Object.assign([], event.target.files);
+      }
+      else {
+        let message = "File must have a size of less then 50 MB & Name of file must be less then 50 characters";
+        this.snackBar.open(message, '', {
+          duration: 3000
+        });
+      }
+    }
   }
 
 }

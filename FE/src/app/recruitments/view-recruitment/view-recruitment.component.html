@@ -19,45 +19,42 @@
     </tbody>
 </table> -->
 
-<div class="w-100 p-24">
+<mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
 
-    <div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
-        <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-            <mat-form-field fxFlex="100">
-                <mat-select placeholder="Select Organization" (change)="changeOrganization()" [(ngModel)]="selected_org">
-                    <mat-option *ngFor="let org of all_organizations" [value]="org">
-                        {{org.ORG_NAME}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-        <ngx-datatable class="material" [rows]="organizations" [loadingIndicator]="loadingIndicator" [columnMode]="'force'" [headerHeight]="48"
-            [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]="reorderable" [limit]="10" fxFlex="1 0 auto">
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> ID. </th>
+      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Candidate Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="weight">
+      <th mat-header-cell *matHeaderCellDef> Candidate Location </th>
+      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef> Candidate Resume </th>
+      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+    </ng-container>
 
-            <ngx-datatable-column [width]="130" [canAutoResize]="false" [sortable]="false">
-                <ng-template ngx-datatable-header-template>
-                    Actions
-                </ng-template>
-
-                <ng-template ngx-datatable-cell-template let-row="row">
-                    <div class="button-row">
-                        <button mat-icon-button color="warn">
-                            <mat-icon class="mat-24" aria-label="Delete" (click)="openDelDialog(row)">delete</mat-icon>
-                        </button>
-                        <button mat-icon-button color="accent">
-                            <mat-icon class="mat-24" aria-label="Edit" (click)="selectOrganization(row)" [routerLink]="['/organizations/edit']">edit</mat-icon>
-                        </button>
-                    </div>
-                </ng-template>
-            </ngx-datatable-column>
-
-            <ngx-datatable-column name="Name" prop="ORG_NAME"></ngx-datatable-column>
-            <ngx-datatable-column name="Location" prop="ORG_LOCATION"></ngx-datatable-column>
-            <ngx-datatable-column name="Contact Number" prop="ORG_CONTACT_NO"></ngx-datatable-column>
-            <ngx-datatable-column name="Address" prop="ORG_ADDRESS"></ngx-datatable-column>
-
-        </ngx-datatable>
-    </div>
-
-</div>
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef> Action </th>
+      <td mat-cell *matCellDef="let element" class="action-link"> 
+        <a (click)="openDialog('Update',element)">Edit</a> | 
+        <a (click)="openDialog('Delete',element)">Delete</a>  
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+  

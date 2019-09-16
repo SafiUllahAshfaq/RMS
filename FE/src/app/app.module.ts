@@ -8,7 +8,8 @@ import { RouterModule } from '@angular/router';
 // import { FuseSharedModule } from '@fuse/shared.module';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
 
-import { MatButtonModule, MatNativeDateModule, MatDatepickerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatStepperModule, MatRadioModule } from '@angular/material';
+import { MatButtonModule, MatNativeDateModule, MatDatepickerModule, MatFormFieldModule, MatIconModule, MatInputModule,
+ MatSelectModule, MatStepperModule, MatRadioModule, MatTableDataSource, MatTableModule } from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatDialogModule } from '@angular/material';
 import { MatSnackBarModule } from '@angular/material';
@@ -50,6 +51,7 @@ import { EditRecruitmentComponent } from './recruitments/edit-recruitment/edit-r
     MatStepperModule,
     MatButtonModule,
     MatIconModule,
+    MatTableModule,
     SlimLoadingBarModule
   ],
   providers: [
