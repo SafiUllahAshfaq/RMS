@@ -10,6 +10,7 @@
   "author": "Safi Ullah Ashfaq",
   "license": "ISC",
   "dependencies": {
+    "@koa/multer": "^2.0.0",
     "gridfs-stream": "^1.1.1",
     "i": "^0.3.6",
     "koa": "2.7.0",

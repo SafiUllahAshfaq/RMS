@@ -3,40 +3,75 @@
 const { RecruitmentForm } = require('../../models/recruitmentform.model');
 const fs = require('fs');
 // const storage = require('../../config/gridfs');
-const envirtonment = require('../../environment');
+const environment = require('../../environment');
 const multer = require('multer');
+// const multer = require('@koa/multer');
 const mongo = require('../../config/database');
 const { createBucket } = require('mongoose-gridfs');
 
-const gridfs = {
-  storage: undefined,
-  upload: undefined
-};
+const Grid = require('gridfs-stream');
+const GridFsStorage = require('multer-gridfs-storage');
+
+let storage = undefined;
+let upload = undefined;
+{
+  // mongo
+  //   .then(db => {
+  //     let gfs;
+  //     db.connection.once("open", () => {
+  //       gfs = Grid(db.connection.db, db.connection.mongo);
+  //       gfs.collection('profilePictures');
+  //     });
+  //   }).catch(err => console.log(err));
+  // const storage = new GridFsStorage({
+  //   url: envirtonment.mongodburl,
+  //   file: (req, file) => {
+  //     return new Promise((resolve, reject) => {
+  //       crypto.randomBytes(16, (err, buf) => {
+  //         if (err) {
+  //           return reject(err);
+  //         }
+  //         const filename = buf.toString('hex') + path.extname(file.originalname);
+  //         const fileInfo = {
+  //           filename: filename,
+  //           bucketName: 'profilePictures'
+  //         };
+  //         resolve(fileInfo);
+  //       });
+  //     });
+  //   }
+  // });
+  // const upload = multer(storage);
+}
 
 exports.uploadCadidateImage = async (ctx, next) => {
-  const fileName = ctx.request.files.profilePic.name;
+  const file = ctx.request.files.profilePicture;
+  const fileName = ctx.request.files.profilePicture.name;
+  // {
   await mongo
-    .then(db => {
+    .then(async db => {
       const bucketName = 'profilePictures';
-      gridfs.storage = createBucket({ bucketName, connection: db.connection });
-      gridfs.upload = multer({ storage: gridfs.storage });
+      storage = createBucket({ bucketName, connection: db.connection });
+      upload = multer({ storage });
       // const readStream = gridfs.storage.createReadStream({
       //   filename: '/uploads/'
       // });
-      const writeStream = gridfs.storage.createWriteStream({
+      const writeStream = storage.createWriteStream({
         _id: db.Types.ObjectId('5d7dacec1b3f1519f0afc84c'),
-        filename: fileName
+        filename: fileName,
+        writeConcern: { w: 1 }
       });
-      gridfs.storage.writeFile({ filename: fileName });
-      gridfs.upload.single(fileName);
-    })
-    .catch(err => console.log(err));
+      // writeStream.write(file)
+      // storage.writeFile({ filename: fileName });
+      await upload.single('profilePicture');
+    }).catch(err => console.log(err));
+  // }
   ctx.body = ctx.request.files;
   next();
 };
 
 // exports.getCandidateImage = async (ctx, next) => {
-//   const fileName = ctx.request.files.profilePic.name;
+//   const fileName = ctx.request.files.profilePicture.name;
 // };
 
 exports.getAllEvaluations = async (ctx, next) => {
