@@ -1,13 +1,20 @@
 {
-  "name": "rms",
-  "version": "0.0.0",
+  "name": "fuse",
+  "version": "5.2.10",
+  "license": "https://themeforest.net/licenses/terms/regular",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng serve --open",
+    "start-hmr": "ng serve --hmr -e=hmr -sm=false",
+    "start-hmr-sourcemaps": "ng serve --hmr -e=hmr",
+    "build": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --dev",
+    "build-stats": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --dev --stats-json",
+    "build-prod": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod",
+    "build-prod-stats": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod --stats-json",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "bundle-report": "webpack-bundle-analyzer dist/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -22,7 +29,10 @@
     "@angular/platform-browser-dynamic": "~8.2.5",
     "@angular/router": "~8.2.5",
     "@swimlane/ngx-datatable": "^16.0.2",
+    "bootstrap": "^4.3.1",
+    "ng2-slim-loading-bar": "^4.0.0",
     "rxjs": "~6.4.0",
+    "rxjs-compat": "^6.5.3",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },
