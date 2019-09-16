@@ -2,8 +2,10 @@ const Koa = require('koa');
 const koaBody = require('koa-body');
 const Router = require('koa-router');
 // const cors = require('@koa/cors')(/* Add your cors option */);
-require('./config/database');
 const logger = require('koa-logger')();
+const serve = require('koa-static');
+
+require('./config/database');
 
 const errorHandler = require('./middleware/error.middleware');
 const candidate = require('./api/candidate/candidate.routes');
@@ -17,6 +19,7 @@ server.use(logger);
 
 server
   .use(errorHandler)
+  .use(serve(__dirname + '/uploads'))
   .use(
     koaBody({
       multipart: true,

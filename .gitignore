@@ -1,5 +1,6 @@
 BK/node_modules/
 BK/package-lock.json
+BK/uploads/
 
 FE/node_modules/
 FE/package-lock.json

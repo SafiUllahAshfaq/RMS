@@ -1,78 +1,40 @@
 'use strict';
 
 const { RecruitmentForm } = require('../../models/recruitmentform.model');
+const path = require('path');
+const send = require('koa-send');
+
 const fs = require('fs');
-// const storage = require('../../config/gridfs');
-const environment = require('../../environment');
-const multer = require('multer');
-// const multer = require('@koa/multer');
-const mongo = require('../../config/database');
-const { createBucket } = require('mongoose-gridfs');
 
-const Grid = require('gridfs-stream');
-const GridFsStorage = require('multer-gridfs-storage');
-
-let storage = undefined;
-let upload = undefined;
-{
-  // mongo
-  //   .then(db => {
-  //     let gfs;
-  //     db.connection.once("open", () => {
-  //       gfs = Grid(db.connection.db, db.connection.mongo);
-  //       gfs.collection('profilePictures');
-  //     });
-  //   }).catch(err => console.log(err));
-  // const storage = new GridFsStorage({
-  //   url: envirtonment.mongodburl,
-  //   file: (req, file) => {
-  //     return new Promise((resolve, reject) => {
-  //       crypto.randomBytes(16, (err, buf) => {
-  //         if (err) {
-  //           return reject(err);
-  //         }
-  //         const filename = buf.toString('hex') + path.extname(file.originalname);
-  //         const fileInfo = {
-  //           filename: filename,
-  //           bucketName: 'profilePictures'
-  //         };
-  //         resolve(fileInfo);
-  //       });
-  //     });
-  //   }
-  // });
-  // const upload = multer(storage);
-}
+const imagesPath = 'uploads/images/candidateprofile/';
 
 exports.uploadCadidateImage = async (ctx, next) => {
+  const id = ctx.request.body._id;
   const file = ctx.request.files.profilePicture;
-  const fileName = ctx.request.files.profilePicture.name;
-  // {
-  await mongo
-    .then(async db => {
-      const bucketName = 'profilePictures';
-      storage = createBucket({ bucketName, connection: db.connection });
-      upload = multer({ storage });
-      // const readStream = gridfs.storage.createReadStream({
-      //   filename: '/uploads/'
-      // });
-      const writeStream = storage.createWriteStream({
-        _id: db.Types.ObjectId('5d7dacec1b3f1519f0afc84c'),
-        filename: fileName,
-        writeConcern: { w: 1 }
-      });
-      // writeStream.write(file)
-      // storage.writeFile({ filename: fileName });
-      await upload.single('profilePicture');
-    }).catch(err => console.log(err));
-  // }
+  const reader = fs.createReadStream(file.path);
+  // const [name, type] = fileName.split('.');
+  // const stream = fs.createWriteStream(path.join(imagesPath, id + "." + type));
+  const stream = fs.createWriteStream(path.join(imagesPath, id + ".jpg"));
+  reader.pipe(stream);
+  reader.on('close', () => {
+    console.log("Done with image saving @ ", stream.path);
+  })
   ctx.body = ctx.request.files;
   next();
-};
+}
 
-// exports.getCandidateImage = async (ctx, next) => {
-//   const fileName = ctx.request.files.profilePicture.name;
-// };
+exports.deleteCandidateImage = (ctx, next) => {
+  const id = ctx.params.id;
+  fs.unlinkSync(imagesPath + id + '.jpg');
+  ctx.body = { success: true, message: `Image Removed`, id };
+  next();
+}
+
+exports.getCandidateImage = async (ctx, next) => {
+  const id = ctx.params.id;
+  await send(ctx, imagesPath + id + ".jpg");
+  next();
+};
 
 exports.getAllEvaluations = async (ctx, next) => {
   await RecruitmentForm.find()
