@@ -2,124 +2,58 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const config = {
+  requiredString: {
+    type: String,
+    required: true
+  },
+  requiredNumber: {
+    type: Number,
+    required: true
+  },
+  requiredDate: {
+    type: Date,
+    required: true
+  }
+}
+
 const RecruitmentFormSchema = new Schema({
   candidateInformation: {
-    name: {
-      type: String,
-      required: true
-    },
-    postAppliedFor: {
-      type: String,
-      required: true
-    }
+    name: config.requiredString,
+    postAppliedFor: config.requiredString
   },
   interviewerAssesment: {
-    education: {
-      type: Number,
-      required: true
-    },
-    jobPersistance: {
-      type: Number,
-      required: true
-    },
-    jobExpreience: {
-      type: Number,
-      required: true
-    }
+    education: config.requiredNumber,
+    jobPersistance: config.requiredNumber,
+    jobExpreience: config.requiredNumber
   },
   personalAndTechnicalTraits: {
-    appearance: {
-      type: Number,
-      required: true
-    },
-    communicationSkills: {
-      type: Number,
-      required: true
-    },
-    programmingSkills: {
-      type: Number,
-      required: true
-    },
-    oopConcepts: {
-      type: Number,
-      required: true
-    },
-    algorithms: {
-      type: Number,
-      required: true
-    },
-    designPattern: {
-      type: Number,
-      required: true
-    },
-    programmingLanguageSkills: {
-      type: Number,
-      required: true
-    },
-    analyticalSkills: {
-      type: Number,
-      required: true
-    },
-    understandingOfdevLifeCycle: {
-      type: Number,
-      required: true
-    },
-    teamPlayerCapability: {
-      type: Number,
-      required: true
-    },
-    teamLeadCapability: {
-      type: Number,
-      required: true
-    },
-    suitabilityForAppliedPost: {
-      type: Number,
-      required: true
-    },
-    scoreObtained: {
-      type: Number,
-      required: true
-    },
-    overAllEvaluation: {
-      type: String,
-      required: true
-    }
+    appearance: config.requiredNumber,
+    communicationSkills: config.requiredNumber,
+    programmingSkills: config.requiredNumber,
+    oopConcepts: config.requiredNumber,
+    algorithms: config.requiredNumber,
+    designPattern: config.requiredNumber,
+    programmingLanguageSkills: config.requiredNumber,
+    analyticalSkills: config.requiredNumber,
+    understandingOfdevLifeCycle: config.requiredNumber,
+    teamPlayerCapability: config.requiredNumber,
+    teamLeadCapability: config.requiredNumber,
+    suitabilityForAppliedPost: config.requiredNumber,
+    scoreObtained: config.requiredNumber,
+    overAllEvaluation: config.requiredString
   },
   interviewer: {
-    name: {
-      type: String,
-      required: true
-    },
-    designation: {
-      type: String,
-      required: true
-    },
-    recommendation: {
-      type: String,
-      required: true
-    }
+    name: config.requiredString,
+    designation: config.requiredString,
+    recommendation: config.requiredString
   },
   hiringAuthorityRemarks: {
-    proposedDesignation: {
-      type: String,
-      required: true
-    },
-    salary: {
-      type: String,
-      required: true
-    },
-    otherBenifits: {
-      type: String,
-      required: true
-    },
-    location: {
-      type: String,
-      required: true
-    },
-    date: {
-      type: Date,
-      required: true
-    }
+    proposedDesignation: config.requiredString,
+    salary: config.requiredString,
+    otherBenifits: config.requiredString,
+    location: config.requiredString,
+    date: config.requiredDate
   }
 });
 
