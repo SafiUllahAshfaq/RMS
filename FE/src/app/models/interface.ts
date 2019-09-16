@@ -1,4 +1,4 @@
-import { EThreePointEstimate, ERecommendation } from './enum';
+import { EThreePointEstimate, ERecommendation, EOverAllEvaluation } from './enum';
 
 export interface ICandidate {
     name: string;
@@ -6,7 +6,7 @@ export interface ICandidate {
 }
 
 export interface IInterviewerAssessment {
-    Education: EThreePointEstimate;
+    education: EThreePointEstimate;
     jobPersistance: EThreePointEstimate;
     jobExpreience: EThreePointEstimate;
 }
@@ -27,6 +27,8 @@ export interface IPersonalAndTechnicalTraits {
     suitabilityForAppliedPost: EThreePointEstimate;
     picture: string;
     cv: string;
+    scoreObtained?: number;
+    overAllEvaluation?: EOverAllEvaluation;
 }
 
 export interface IInterviewer {

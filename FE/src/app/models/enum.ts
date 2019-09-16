@@ -1,7 +1,8 @@
 export enum EThreePointEstimate {
     fair = 1,
     satisfactory = 3,
-    good = 4
+    good = 4,
+    notApplicable = 0
 }
 
 export enum ERecommendation {
@@ -9,6 +10,12 @@ export enum ERecommendation {
     notRecommended = "Not Recommended",
     holdForFuture = "Hold For Future",
     reEvaluate = "Re Evaluate"
+}
+
+export enum EOverAllEvaluation {
+    fair = "Fair",
+    average = "Average",
+    good = "Good"
 }
 
 // export enum IInterviewerDesignation {
