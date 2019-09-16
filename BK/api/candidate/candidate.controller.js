@@ -1,18 +1,19 @@
 'use strict';
 
-const { RecruitmentForm } = require('../../models/recruitmentform.model');
 const path = require('path');
 const send = require('koa-send');
-
 const fs = require('fs');
 
-const imagesPath = 'uploads/images/candidateprofile/';
+const { RecruitmentForm } = require('../../models/recruitmentform.model');
+
+const imagesPath = 'uploads/images/candidate/profile/';
+const cvsPath = 'uploads/documents/candidate/cv/';
 
 exports.uploadCadidateImage = async (ctx, next) => {
   const id = ctx.request.body._id;
   const file = ctx.request.files.profilePicture;
   const reader = fs.createReadStream(file.path);
-  // const [name, type] = fileName.split('.');
+  // const [name, type] = file.name.split('.');
   // const stream = fs.createWriteStream(path.join(imagesPath, id + "." + type));
   const stream = fs.createWriteStream(path.join(imagesPath, id + ".jpg"));
   reader.pipe(stream);
@@ -22,6 +23,7 @@ exports.uploadCadidateImage = async (ctx, next) => {
   ctx.body = ctx.request.files;
   next();
 }
+
 
 exports.deleteCandidateImage = (ctx, next) => {
   const id = ctx.params.id;
@@ -33,6 +35,29 @@ exports.deleteCandidateImage = (ctx, next) => {
 exports.getCandidateImage = async (ctx, next) => {
   const id = ctx.params.id;
   await send(ctx, imagesPath + id + ".jpg");
+  next();
+};
+
+exports.uploadCadidateCv = async (ctx, next) => {
+  const id = ctx.request.body._id;
+  const candidateName = ctx.request.body.candidateName;
+  const file = ctx.request.files.cv;
+  const reader = fs.createReadStream(file.path);
+  const [name, type] = file.name.split('.');
+  // const stream = fs.createWriteStream(path.join(imagesPath, id + "." + type));
+  const stream = fs.createWriteStream(path.join(cvsPath, candidateName + "_" + id + '.' + type));
+  reader.pipe(stream);
+  reader.on('close', () => {
+    console.log("Done with cv saving @ ", stream.path);
+  })
+  ctx.body = ctx.request.files;
+  next();
+}
+
+exports.getCandidateCv = async (ctx, next) => {
+  const id = ctx.params.id;
+  const candidateName = ctx.params.candidateName;
+  await send(ctx, cvsPath + candidateName + "_" + id + ".pdf");
   next();
 };
 
