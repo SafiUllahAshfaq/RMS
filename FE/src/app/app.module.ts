@@ -4,7 +4,11 @@ import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatStepperModule } from '@angular/material';
+// import { FuseModule } from '@fuse/fuse.module';
+// import { FuseSharedModule } from '@fuse/shared.module';
+import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
+
+import { MatButtonModule, MatNativeDateModule, MatDatepickerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatStepperModule, MatRadioModule } from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatDialogModule } from '@angular/material';
 import { MatSnackBarModule } from '@angular/material';
@@ -12,6 +16,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
+import { RecruitmentsService } from './services/recruitments.service';
 
 import { AddRecruitmentComponent } from './recruitments/add-recruitment/add-recruitment.component';
 import { ViewRecruitmentComponent } from './recruitments/view-recruitment/view-recruitment.component';
@@ -37,12 +43,18 @@ import { EditRecruitmentComponent } from './recruitments/edit-recruitment/edit-r
     MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule ,
     MatSelectModule,
+    MatRadioModule,
     MatStepperModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    SlimLoadingBarModule
   ],
-  providers: [],
+  providers: [
+    RecruitmentsService,
+    MatDatepickerModule,],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

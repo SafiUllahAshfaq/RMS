@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
+import { NavigationCancel, Event, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
@@ -10,56 +11,31 @@ import { MatSnackBar } from '@angular/material';
 })
 
 export class AppComponent {
-  constructor( private router: Router, private formBuilder: FormBuilder, private snackBar: MatSnackBar) {
-    this.formErrors = {
-      name: {},
-      address: {},
-      city: {},
-      country: {},
-      contact: {},
-      url: {},
-      contact_person_name: {},
-      contact_person_number: {},
-      parent_org: {}
-    };
+  constructor( private router: Router, private loadingBar: SlimLoadingBarService, private formBuilder: FormBuilder,
+     private snackBar: MatSnackBar) {
+
+    this.router.events.subscribe((event: Event) => {
+      this.navigationInterceptor(event);
+    });
   }
 
   ngOnInit(){
-
-    this.form = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.maxLength(50)]],
-      address: ['', [Validators.required, Validators.maxLength(50)]],
-      city: ['', [Validators.required, Validators.pattern('^[a-zA-Z- ]*$'), Validators.maxLength(50)]],
-      country: ['', [Validators.required, Validators.pattern('^[a-zA-Z- ]*$'), Validators.maxLength(50)]],
-      contact: ['', [Validators.required, Validators.pattern('^[0-9-]*$'), Validators.maxLength(50)]],
-      url: ['', [Validators.required,]],
-      contact_person_name: ['', [Validators.required, Validators.pattern('^[a-zA-Z- ]*$'), Validators.maxLength(50)]],
-      contact_person_number: ['', [Validators.required, Validators.pattern('^[0-9-]*$'), Validators.maxLength(50)]],
-      parent_org: ['', Validators.required]
-    });
-
-    this.form.valueChanges.subscribe(() => {
-      this.onFormValuesChanged();
-    });
   }
 
-  organization: any = {};
   title = 'rms';
-  form: FormGroup;
-  formErrors: any;
 
-  onFormValuesChanged() {
-    for (const field in this.formErrors) {
-      if (!this.formErrors.hasOwnProperty(field)) {
-        continue;
-      }
-
-      this.formErrors[field] = {};
-      const control = this.form.get(field);
-
-      if (control && control.dirty && !control.valid) {
-        this.formErrors[field] = control.errors;
-      }
+  private navigationInterceptor(event: Event): void {
+    if (event instanceof NavigationStart) {
+      this.loadingBar.start();
+    }
+    if (event instanceof NavigationEnd) {
+      this.loadingBar.complete();
+    }
+    if (event instanceof NavigationCancel) {
+      this.loadingBar.stop();
+    }
+    if (event instanceof NavigationError) {
+      this.loadingBar.stop();
     }
   }
 }

@@ -1,156 +1,29 @@
-<div id="forms" class="page-layout simple fullwidth" fxLayout="column">
-  <div class="header mat-accent-bg p-24 h-160" fxLayout="row" fxLayoutAlign="start center">
-    <div fxLayout="column" fxLayoutAlign="center start">
-      <div class="h1 mt-16">Organizations</div>
-    </div>
+<ng2-slim-loading-bar color="blue"></ng2-slim-loading-bar>
+<div class="section-title px-8">
+    <button class="button-width" mat-raised-button type="button" color="primary" [routerLink]="['/recruitments']">
+      Recruitments List
+    </button>
+    <button class="button-width button-ml" mat-raised-button type="button" color="primary" [routerLink]="['/recruitment/add']">
+      Add Recruitments
+    </button>
+</div>
+<!-- <nav class="navbar navbar-expand-sm bg-light">
+  <div class="row container-fluid">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a routerLink="recruitment/add" class="nav-link" routerLinkActive="active">
+          Create Product
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="recruitments" class="nav-link" routerLinkActive="active">
+          Products
+        </a>
+      </li> 
+    </ul>
   </div>
+</nav> -->
 
-  <div class="content p-24">
-    <div fxLayout="column" fxLayoutAlign="start start" fxLayout.gt-md="row">
-      <form class="mat-white-bg mat-elevation-z4 p-24 mb-24" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
-        [formGroup]="form" (ngSubmit)="addOrganization(form.value)">
-
-        <div class="h2 mb-24">Add Organization</div>
-
-        <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-          <mat-form-field fxFlex="100">
-            <input matInput placeholder="Organization" formControlName="name" [(ngModel)]="organization.ORG_NAME" required>
-            <mat-error *ngIf="formErrors.name.required">
-              Organization Name is required!
-            </mat-error>
-            <mat-error *ngIf="formErrors.name.maxlength">
-              Only 50 characters are allowed!
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-          <mat-form-field fxFlex="100">
-            <textarea matInput placeholder="Address" formControlName="address" [(ngModel)]="organization.ORG_ADDRESS" required></textarea>
-            <mat-error *ngIf="formErrors.address.required">
-              Address is required!
-            </mat-error>
-            <mat-error *ngIf="formErrors.address.maxlength">
-              Only 50 characters are allowed!
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-          <mat-form-field fxFlex="50">
-            <input matInput placeholder="City" formControlName="city" [(ngModel)]="organization.ORG_CITY" required>
-            <mat-error *ngIf="formErrors.city.required">
-              City is required!
-            </mat-error>
-            <mat-error *ngIf="formErrors.city.pattern">
-              Only alphabets are allowed! 
-            </mat-error>
-            <mat-error *ngIf="formErrors.city.maxlength">
-              Only 50 characters are allowed!
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field fxFlex="50">
-            <input matInput placeholder="Country" formControlName="country" [(ngModel)]="organization.ORG_COUNTRY" required>
-            <mat-error *ngIf="formErrors.country.required">
-              Country is required!
-            </mat-error>
-            <mat-error *ngIf="formErrors.country.pattern">
-              Only alphabets are allowed! 
-            </mat-error>
-            <mat-error *ngIf="formErrors.country.maxlength">
-              Only 50 characters are allowed!
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div fxLayout="row wrap" fxLayoutAlign="start center" fxFlex="1 0 auto">
-          <mat-form-field fxFlex="50">
-            <input matInput placeholder="Contact Number" formControlName="contact" [(ngModel)]="organization.ORG_CONTACT_NO" required>
-            <mat-error *ngIf="formErrors.contact.required">
-              Contact is required!
-            </mat-error>
-            <mat-error *ngIf="formErrors.contact.pattern">
-              Only numerals are allowed!
-            </mat-error>
-            <mat-error *ngIf="formErrors.contact.maxlength">
-              Only 50 characters are allowed!
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field fxFlex="50">
-            <input matInput placeholder="Organization URL" formControlName="url" [(ngModel)]="organization.ORG_URL" required>
-            <mat-error *ngIf="formErrors.url.required">
-              URL is required!
-            </mat-error>
-            <mat-error *ngIf="formErrors.url.pattern">
-              Inappropriate url format!
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-          <mat-form-field fxFlex="50">
-            <input matInput placeholder="Contact Person Name" formControlName="contact_person_name" [(ngModel)]="organization.ORG_CONTACT_PERSON_NAME"
-              required>
-            <mat-error *ngIf="formErrors.contact_person_name.required">
-              Contact Person Name is required!
-            </mat-error>
-            <mat-error *ngIf="formErrors.contact_person_name.pattern">
-              Only alphabets are allowed! 
-            </mat-error>
-            <mat-error *ngIf="formErrors.contact_person_name.maxlength">
-              Only 50 characters are allowed!
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field fxFlex="50">
-            <input matInput placeholder="Contact Person Number" formControlName="contact_person_number" [(ngModel)]="organization.ORG_CONTACT_PERSON_NUMBER"
-              required>
-            <mat-error *ngIf="formErrors.contact_person_number.required">
-              Contact Person Number is required!
-            </mat-error>
-            <mat-error *ngIf="formErrors.contact_person_number.pattern">
-              Only numerals are allowed! 
-            </mat-error>
-            <mat-error *ngIf="formErrors.contact_person_number.maxlength">
-              Only 50 characters are allowed!
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-          <mat-form-field class="left-button" fxFlex="50">
-            <mat-select placeholder="Parent Organization" formControlName="parent_org" [(ngModel)]="organization.ORG_PARENT_ID" required>
-              <mat-option *ngFor="let org of organizations" [value]="org.ORG_ID">
-                {{org.ORG_NAME}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="formErrors.parent_org.required">
-              Parent Organization is required!
-            </mat-error>
-          </mat-form-field>
-
-          <!-- <div fxFlex="50">
-            <input hidden type="file" (change)="uploadImage($event)" accept="image/x-png" #fileInput/>
-            <button mat-raised-button class="add-file-button mat-basic" type="button" (click)="fileInput.click()" aria-label="Add file"
-              *fuseIfOnDom>
-              Upload Logo
-            </button>
-            <div class="image-info" *ngIf="image_info.image_name">{{ image_info.image_name }} ({{ image_info.image_size }})</div>
-          </div> -->
-        </div>
-
-        <div class="pt-24" fxLayout="row" fxLayoutAlign="flex-end">
-          <button class="mr-8" mat-raised-button type="button" color="primary" [routerLink]="['/organizations']">
-            Cancel
-          </button>
-          <button mat-raised-button [disabled]="!form.valid" type="submit" color="accent">
-            Save
-          </button>
-        </div>
-
-      </form>
-    </div>
-  </div>
+<div class="container">
+  <router-outlet></router-outlet>
 </div>

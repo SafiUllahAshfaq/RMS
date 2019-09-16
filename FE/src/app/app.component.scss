@@ -1,16 +1,15 @@
-.add-file-button {
-    width: 100%;
-  }
-  
-  .image-info {
-    text-align: center;
-  }
-  
-  .right-button {
-    padding-right: 10px;
-    padding-top: 10px;
-  }
-  
-  .left-button {
-    padding-right: 10px;
-  }
+.section-title {
+    border: 1px solid;
+    margin: 10px 400px 10px 400px;
+    border-radius: 0px;
+    border-color: rgba(0, 0, 0, .12);
+    background-color:black; 
+}
+
+.button-width {
+    width: 272px;
+}
+
+.button-ml{
+    margin-left: 2px;
+}
