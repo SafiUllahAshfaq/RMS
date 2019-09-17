@@ -49,6 +49,18 @@ export class AddRecruitmentComponent implements OnInit {
     };
   }
 
+  recruitmentForm: FormGroup;
+  formErrors: any;
+  resumeInfo: any = {};
+  imageInfo: any = {};
+  uploadedFiles: any = [];
+  recruitmentSaved: boolean = false;
+  resumeUploaded: boolean = false;
+  imageUploaded: boolean = false;
+  fileData: any;
+  isNewForm: boolean = true;
+  candidateId: string = '';
+
   ngOnInit() {
     this.recruitmentForm = this.formBuilder.group({
       candidateName: ['Saad Sohail', [Validators.required, Validators.maxLength(50)]],
@@ -80,28 +92,52 @@ export class AddRecruitmentComponent implements OnInit {
       otherBenefits: ['Medical Benifits', [Validators.required, Validators.maxLength(500)]],
       location: ['Lahore', [Validators.required, Validators.maxLength(50)]],
       date: ['2019-09-19', [Validators.required, Validators.maxLength(50)]],
-      hiringAuthoritySignature: [''],
+      hiringAuthoritySignature: ['']
     });
+    this.hiringAuthoritySignature.disable();
 
     if (!this.imageUploaded) {
       this.imageInfo.USER_FILE_SRC = "assets/images/profile.jpg";
     }
-
     this.recruitmentService.selected_recruitment.subscribe(recruitment => {
       //this.recruitmentForm = recruitment;
-      console.log(recruitment);
+      if (!!Object.entries(recruitment).length) {
+        this.isNewForm = false;
+        const data: IRecruitmentForm = recruitment;
+        this.candidateId = data._id;
+        console.log(data, this.candidateId);
+        this.candidateName.setValue(data.candidateInformation.name);
+        this.candidatePosition.setValue(data.candidateInformation.postAppliedFor);
+        this.relevantEducation.setValue(`${data.interviewerAssesment.education}`);
+        this.relevantJobPersistance.setValue(`${data.interviewerAssesment.jobPersistance}`);
+        this.relevantJobExperience.setValue(`${data.interviewerAssesment.jobExpreience}`);
+        this.appearance.setValue(`${data.personalAndTechnicalTraits.appearance}`);
+        this.communicationSkills.setValue(`${data.personalAndTechnicalTraits.communicationSkills}`);
+        this.basicProgrammingSkills.setValue(`${data.personalAndTechnicalTraits.programmingSkills}`);
+        this.objectOrientedConcepts.setValue(`${data.personalAndTechnicalTraits.oopConcepts}`);
+        this.dataStructureConcepts.setValue(`${data.personalAndTechnicalTraits.dataStructureConcepts}`);
+        this.algorithm.setValue(`${data.personalAndTechnicalTraits.algorithms}`);
+        this.designPattern.setValue(`${data.personalAndTechnicalTraits.designPattern}`);
+        this.programingLanguageSkills.setValue(`${data.personalAndTechnicalTraits.programmingLanguageSkills}`);
+        this.analyticalSkills.setValue(`${data.personalAndTechnicalTraits.analyticalSkills}`);
+        this.understandingOfDevLifeCycle.setValue(`${data.personalAndTechnicalTraits.understandingOfdevLifeCycle}`);
+        this.teamPlayerCapability.setValue(`${data.personalAndTechnicalTraits.teamPlayerCapability}`);
+        this.teamLeadCapability.setValue(`${data.personalAndTechnicalTraits.teamLeadCapability}`);
+        this.suitabilityForAppliedPost.setValue(`${data.personalAndTechnicalTraits.suitabilityForAppliedPost}`);
+        this.scoreObtained.setValue(data.personalAndTechnicalTraits.scoreObtained);
+        this.overallEvaluation.setValue(`${data.personalAndTechnicalTraits.overAllEvaluation}`);
+        this.interviewerName.setValue(data.interviewer.name);
+        this.interviewerDesignation.setValue(data.interviewer.designation);
+        this.recommendation.setValue(data.interviewer.recommendation);
+        this.interviewerComments.setValue(data.interviewer.comments);
+        this.proposedDesignation.setValue(data.hiringAuthorityRemarks.proposedDesignation);
+        this.salary.setValue(data.hiringAuthorityRemarks.salary);
+        this.otherBenefits.setValue(data.hiringAuthorityRemarks.otherBenifits);
+        this.location.setValue(data.hiringAuthorityRemarks.location);
+        this.date.setValue(data.hiringAuthorityRemarks.date.toString().split('T')[0]);
+      }
     });
   }
-
-  recruitmentForm: FormGroup;
-  formErrors: any;
-  resumeInfo: any = {};
-  imageInfo: any = {};
-  uploadedFiles: any = [];
-  recruitmentSaved: boolean = false;
-  resumeUploaded: boolean = false;
-  imageUploaded: boolean = false;
-  fileData: any;
 
   onFormValuesChanged() {
     for (const field in this.formErrors) {
@@ -166,12 +202,20 @@ export class AddRecruitmentComponent implements OnInit {
       interviewer,
       hiringAuthorityRemarks
     }
-    console.log(payload);
-    await this.recruitmentService.postEvaluation(payload).subscribe(res => {
-      console.log(res);
-      // this.recruitmentForm.reset();
-      this.snackBar.open('Recruitment Added Successfully!!', '', { duration: 3000 });
-    });
+    // console.log(payload);
+    if (this.isNewForm) {
+      await this.recruitmentService.addRecruitment(payload).subscribe(res => {
+        console.log(res, this.isNewForm);
+        // this.recruitmentForm.reset();
+        this.snackBar.open('Recruitment Added Successfully!!', '', { duration: 3000 });
+      });
+    } else {
+      payload._id = this.candidateId;
+      await this.recruitmentService.editRecruitment(payload).subscribe(res => {
+        console.log(res, this.isNewForm);
+        this.snackBar.open('Recruitment Updated Successfully!!', '', { duration: 3000, panelClass: 'bg-success' });
+      })
+    }
     this.router.navigateByUrl('recruitments');
     this.recruitmentSaved = true;
   }
@@ -243,4 +287,96 @@ export class AddRecruitmentComponent implements OnInit {
       console.log(res);
     })
   }
+
+  get candidateName() {
+    return this.recruitmentForm.get("candidateName");
+  }
+  get candidatePosition() {
+    return this.recruitmentForm.get("candidatePosition");
+  }
+  get relevantEducation() {
+    return this.recruitmentForm.get("relevantEducation");
+  }
+  get relevantJobPersistance() {
+    return this.recruitmentForm.get("relevantJobPersistance");
+  }
+  get relevantJobExperience() {
+    return this.recruitmentForm.get("relevantJobExperience");
+  }
+  get appearance() {
+    return this.recruitmentForm.get("appearance");
+  }
+  get communicationSkills() {
+    return this.recruitmentForm.get("communicationSkills");
+  }
+  get basicProgrammingSkills() {
+    return this.recruitmentForm.get("basicProgrammingSkills");
+  }
+  get objectOrientedConcepts() {
+    return this.recruitmentForm.get("objectOrientedConcepts");
+  }
+  get dataStructureConcepts() {
+    return this.recruitmentForm.get("dataStructureConcepts");
+  }
+  get algorithm() {
+    return this.recruitmentForm.get("algorithm");
+  }
+  get designPattern() {
+    return this.recruitmentForm.get("designPattern");
+  }
+  get programingLanguageSkills() {
+    return this.recruitmentForm.get("programingLanguageSkills");
+  }
+  get analyticalSkills() {
+    return this.recruitmentForm.get("analyticalSkills");
+  }
+  get understandingOfDevLifeCycle() {
+    return this.recruitmentForm.get("understandingOfDevLifeCycle");
+  }
+  get teamPlayerCapability() {
+    return this.recruitmentForm.get("teamPlayerCapability");
+  }
+  get teamLeadCapability() {
+    return this.recruitmentForm.get("teamLeadCapability");
+  }
+  get suitabilityForAppliedPost() {
+    return this.recruitmentForm.get("suitabilityForAppliedPost");
+  }
+  get scoreObtained() {
+    return this.recruitmentForm.get("scoreObtained");
+  }
+  get overallEvaluation() {
+    return this.recruitmentForm.get("overallEvaluation");
+  }
+  get interviewerName() {
+    return this.recruitmentForm.get("interviewerName");
+  }
+  get interviewerDesignation() {
+    return this.recruitmentForm.get("interviewerDesignation");
+  }
+  get recommendation() {
+    return this.recruitmentForm.get("recommendation");
+  }
+  get interviewerComments() {
+    return this.recruitmentForm.get("interviewerComments");
+  }
+  get proposedDesignation() {
+    return this.recruitmentForm.get("proposedDesignation");
+  }
+  get salary() {
+    return this.recruitmentForm.get("salary");
+  }
+  get otherBenefits() {
+    return this.recruitmentForm.get("otherBenefits");
+  }
+  get location() {
+    return this.recruitmentForm.get("location");
+  }
+  get date() {
+    return this.recruitmentForm.get("date");
+  }
+  get hiringAuthoritySignature() {
+    return this.recruitmentForm.get("hiringAuthoritySignature");
+  }
+
 }

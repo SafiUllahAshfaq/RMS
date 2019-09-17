@@ -1,8 +1,8 @@
 'use strict';
 
 const path = require('path');
-const send = require('koa-send');
 const fs = require('fs');
+const send = require('koa-send');
 
 const { RecruitmentForm } = require('../../models/recruitmentform.model');
 
@@ -78,8 +78,8 @@ exports.uploadCadidateCv = async (ctx, next) => {
 }
 
 exports.getCandidateCv = async (ctx, next) => {
-  const id = ctx.params.id;
-  const candidateName = ctx.params.candidateName;
+  const id = ctx.request.body.id;
+  const candidateName = ctx.request.body.candidateName.replace(" ", "").toLowerCase();
   await send(ctx, cvsPath + candidateName + "_" + id + ".pdf");
   next();
 };
@@ -133,6 +133,8 @@ exports.updateEvaluation = async (ctx, next) => {
   const id = document._id;
   delete document._id;
   const config = { new: true, useFindAndModify: true };
+  console.log(document);
+
   await RecruitmentForm.findByIdAndUpdate(id, document, config)
     .then(result => {
       ctx.body = result;

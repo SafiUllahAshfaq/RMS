@@ -6,15 +6,6 @@ import { Router } from '@angular/router';
 import { RecruitmentsService } from "../../services/recruitments.service";
 import { IRecruitmentForm } from '../../models/interface';
 
-export interface PeriodicElement {
-  sno: number;
-  candidateName: string;
-  postAppliedFor: string;
-  candidateLocation: string;
-  interviewerName: string;
-  candiateCv: string;
-}
-
 @Component({
   selector: 'app-view-recruitment',
   templateUrl: './view-recruitment.component.html',
@@ -38,6 +29,24 @@ export class ViewRecruitmentComponent implements OnInit {
     });
   }
 
+  downloadCv(recruitmentFormDetails) {
+    console.log(recruitmentFormDetails);
+    // const payload = {
+    //   id: recruitmentFormDetails._id,
+    //   candidateName: recruitmentFormDetails.candidateInformation.name
+    // }
+    const payload = {
+      id: "5d8077090fd08d3e84b7e3ae",
+      candidateName: "Safi Ullah"
+    }
+    this.recruitmentService.getCandidateCv(payload);
+  }
+
+  private downloadFile(data: Response) {
+    const blob = new Blob([data], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
+  }
 
   applyFilter(filterValue: string) {
     console.log(filterValue.trim().toLowerCase());
@@ -50,7 +59,12 @@ export class ViewRecruitmentComponent implements OnInit {
   }
 
   deleteRecruitment(recruitment) {
-    console.log(recruitment);
+    this.recruitmentService.deleteRecruitment(recruitment._id).subscribe(res => {
+      console.log(res);
+      this.getAllRecruitments();
+    }, error => {
+      console.log(error);
+    })
     //this.router.navigateByUrl('recruitments');
     // this.departmentService.deleteDepartment(dep)
     //   .subscribe(result => {

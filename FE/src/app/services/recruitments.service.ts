@@ -19,8 +19,6 @@ export class RecruitmentsService {
     this.recruitment.next(recruitment);
   }
 
-
-
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
@@ -29,17 +27,16 @@ export class RecruitmentsService {
     return this.http.get(this.rest_api + 'allevaluations');
   }
 
-  getrecruitment(recruitment): Observable<any> {
+  getRecruitmentById(recruitment): Observable<any> {
     return this.http.post(this.rest_api + 'recruitments/id', recruitment, this.httpOptions);
   }
 
-  postEvaluation(evaluationForm: IRecruitmentForm): Observable<any> {
+  addRecruitment(evaluationForm: IRecruitmentForm): Observable<any> {
     console.log(evaluationForm);
     return this.http.post(this.rest_api + 'postevaluation', evaluationForm, this.httpOptions);
   }
 
   uploadCadidateCv(cvFile): Observable<any> {
-    // console.log(cvFile);
     const formData: FormData = new FormData();
     console.log(cvFile);
 
@@ -49,12 +46,20 @@ export class RecruitmentsService {
     return this.http.post(this.rest_api + 'uploadcadidatecv', formData);
   }
 
-  deleterecruitment(recruitment): Observable<any> {
-    return this.http.post(this.rest_api + 'recruitments/delete', recruitment, this.httpOptions);
+  deleteRecruitment(candidateId): Observable<any> {
+    return this.http.delete(this.rest_api + `deleteevaluation/${candidateId}`, this.httpOptions);
   }
 
-  editrecruitment(recruitment): Observable<any> {
-    return this.http.put(this.rest_api + 'recruitments', recruitment, this.httpOptions);
+  editRecruitment(recruitmentForm: IRecruitmentForm): Observable<any> {
+    return this.http.put(this.rest_api + 'updateevaluation', recruitmentForm, this.httpOptions);
+  }
+
+  getCandidateCv(payload) {
+    this.http.post(this.rest_api + 'getcandidatecv', payload).subscribe(res => {
+      console.log('img: ', res);
+    }, error => {
+      console.log(error);
+    })
   }
 
 }
