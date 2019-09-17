@@ -39,6 +39,28 @@ exports.getCandidateImage = async (ctx, next) => {
 };
 
 exports.uploadCadidateCv = async (ctx, next) => {
+  // const id = ctx.request.body._id;
+  // const candidateName = ctx.request.body.candidateName;
+  // const file = ctx.request.body.cv;
+  // // const reader = fs.createReadStream(file.path);
+  // const [name, type] = file.name.split('.');
+  // // // const stream = fs.createWriteStream(path.join(imagesPath, id + "." + type));
+  // // const stream = fs.createWriteStream(path.join(cvsPath, candidateName + "_" + id + '.' + type));
+  // // reader.pipe(stream);
+  // // reader.on('close', () => {
+  // //   console.log("Done with cv saving @ ", stream.path);
+  // // })
+  // var buf = new Buffer(ctx.request.body.cv.path, 'base64');
+  // fs.writeFile(path.join(cvsPath, candidateName + "_" + id + '.' + type), buf, function (err) {
+  //   if (err) {
+  //     console.log("err", err);
+  //   } else {
+  //     console.log('Success...')
+  //   }
+  // });
+
+  // ctx.body = ctx.request.body;
+
   const id = ctx.request.body._id;
   const candidateName = ctx.request.body.candidateName;
   const file = ctx.request.files.cv;
@@ -51,6 +73,7 @@ exports.uploadCadidateCv = async (ctx, next) => {
     console.log("Done with cv saving @ ", stream.path);
   })
   ctx.body = ctx.request.files;
+
   next();
 }
 
@@ -86,7 +109,6 @@ exports.postEvaluation = async (ctx, next) => {
 
 exports.getEvaluation = async (ctx, next) => {
   const id = ctx.params.id;
-  console.log(id);
   await RecruitmentForm.findById(id)
     .then(result => {
       ctx.body = result;
@@ -110,7 +132,7 @@ exports.updateEvaluation = async (ctx, next) => {
   const document = ctx.request.body;
   const id = document._id;
   delete document._id;
-  const config = { new: true };
+  const config = { new: true, useFindAndModify: true };
   await RecruitmentForm.findByIdAndUpdate(id, document, config)
     .then(result => {
       ctx.body = result;

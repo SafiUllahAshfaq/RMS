@@ -32,6 +32,7 @@ const RecruitmentFormSchema = new Schema({
     communicationSkills: config.requiredNumber,
     programmingSkills: config.requiredNumber,
     oopConcepts: config.requiredNumber,
+    dataStructureConcepts: config.requiredNumber,
     algorithms: config.requiredNumber,
     designPattern: config.requiredNumber,
     programmingLanguageSkills: config.requiredNumber,
@@ -46,7 +47,8 @@ const RecruitmentFormSchema = new Schema({
   interviewer: {
     name: config.requiredString,
     designation: config.requiredString,
-    recommendation: config.requiredString
+    recommendation: config.requiredString,
+    comments: config.requiredString
   },
   hiringAuthorityRemarks: {
     proposedDesignation: config.requiredString,

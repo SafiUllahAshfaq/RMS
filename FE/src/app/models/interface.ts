@@ -1,5 +1,15 @@
 import { EThreePointEstimate, ERecommendation, EOverAllEvaluation } from './enum';
 
+export interface IRecruitmentForm {
+    _id?: string,
+    __v?: number,
+    candidateInformation: ICandidate,
+    interviewerAssesment: IInterviewerAssessment,
+    personalAndTechnicalTraits: IPersonalAndTechnicalTraits,
+    interviewer: IInterviewer,
+    hiringAuthorityRemarks: IHiringAuthorityRemarks
+}
+
 export interface ICandidate {
     name: string;
     postAppliedFor: string;
@@ -10,7 +20,6 @@ export interface IInterviewerAssessment {
     jobPersistance: EThreePointEstimate;
     jobExpreience: EThreePointEstimate;
 }
-
 
 export interface IPersonalAndTechnicalTraits {
     appearance: EThreePointEstimate;
@@ -44,3 +53,4 @@ export interface IHiringAuthorityRemarks {
     location: string,
     date: Date
 }
+

@@ -4,6 +4,7 @@ const Router = require('koa-router');
 // const cors = require('@koa/cors')(/* Add your cors option */);
 const logger = require('koa-logger')();
 const serve = require('koa-static');
+var cors = require('koa-cors');
 
 require('./config/database');
 
@@ -15,9 +16,9 @@ const router = new Router();
 
 const PORT = process.env.PORT || 500;
 
-server.use(logger);
-
 server
+  .use(logger)
+  .use(cors())
   .use(errorHandler)
   .use(serve(__dirname + '/uploads'))
   .use(

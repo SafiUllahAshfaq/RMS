@@ -2,8 +2,8 @@
 
     <div class="content p-24">
         <div fxLayout="column" fxLayoutAlign="start start" fxLayout.gt-md="row">
-            <form class="mat-white-bg mat-elevation-z4 p-24 mb-24" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
-                [formGroup]="recruitmentForm" (ngSubmit)="addRecruitment()">
+            <form class="mat-white-bg mat-elevation-z4 p-24 mb-24" enctype="multipart/form-data" fxLayout="column" fxLayoutAlign="start"
+                fxFlex="1 0 auto" name="form" [formGroup]="recruitmentForm" (ngSubmit)="addRecruitment()">
 
                 <div class="h2 mb-24">Add Recruitment Information</div>
 
@@ -261,13 +261,13 @@
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
                     <div class="w-100">
                         <label class="label-margin">Suitability for Position Applied : </label>
-                        <mat-radio-group formControlName="suitabilityForPositionApplied">
+                        <mat-radio-group formControlName="suitabilityForAppliedPost">
                             <mat-radio-button class="label-margin" value="0">Not Applicable</mat-radio-button>
                             <mat-radio-button class="label-margin" value="1">Fair</mat-radio-button>
                             <mat-radio-button class="label-margin" value="3">Satisfactory</mat-radio-button>
                             <mat-radio-button class="label-margin" value="4">Good</mat-radio-button>
                         </mat-radio-group>
-                        <mat-error *ngIf="formErrors.suitabilityForPositionApplied.required">
+                        <mat-error *ngIf="formErrors.suitabilityForAppliedPost.required">
                             Suitability for Position Applied is required!
                         </mat-error>
                     </div>
@@ -276,9 +276,9 @@
                     <div class="w-100">
                         <input hidden type="file" (change)="uploadFile($event)" accept="application/pdf" #fileInput/>
                         <button mat-raised-button class="upload-button mat-basic" type="button" (click)="fileInput.click()">
-                            Upload File
+                            Upload CV
                         </button>
-                        <!-- <div class="upload-info" *ngIf="file_info.file_name">{{ file_info.file_name }} ({{ file_info.file_size }})</div> -->
+                        <div class="upload-info" *ngIf="resumeInfo.name">{{ resumeInfo.name }} ({{ resumeInfo.size }})</div>
                     </div>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">

@@ -10,7 +10,7 @@ export class RecruitmentsService {
   constructor(private http: HttpClient) {
   }
 
-  rest_api = 'http://localhost:3000';
+  rest_api = 'http://localhost:500/candidate/';
   recruitment = new BehaviorSubject<any>({});
   selected_recruitment = this.recruitment.asObservable();
 
@@ -23,23 +23,34 @@ export class RecruitmentsService {
   };
 
   getObservableRecruitments(): Observable<any> {
-    return this.http.get(this.rest_api + '/recruitments');
+    return this.http.get(this.rest_api + 'recruitments');
   }
 
   getrecruitment(recruitment): Observable<any> {
-    return this.http.post(this.rest_api + '/recruitments/id', recruitment, this.httpOptions);
+    return this.http.post(this.rest_api + 'recruitments/id', recruitment, this.httpOptions);
   }
 
-  addrecruitment(recruitment): Observable<any> {
-    return this.http.post(this.rest_api + '/recruitments', recruitment, this.httpOptions);
+  postEvaluation(evaluationForm): Observable<any> {
+    return this.http.post(this.rest_api + 'recruitments', evaluationForm, this.httpOptions);
+  }
+
+  uploadCadidateCv(cvFile): Observable<any> {
+    // console.log(cvFile);
+    const formData: FormData = new FormData();
+    console.log(cvFile);
+
+    formData.append('cv', JSON.stringify(cvFile.cv.path), cvFile.cv.name);
+    console.log(formData);
+
+    return this.http.post(this.rest_api + 'uploadcadidatecv', formData);
   }
 
   deleterecruitment(recruitment): Observable<any> {
-    return this.http.post(this.rest_api + '/recruitments/delete', recruitment, this.httpOptions);
+    return this.http.post(this.rest_api + 'recruitments/delete', recruitment, this.httpOptions);
   }
 
   editrecruitment(recruitment): Observable<any> {
-    return this.http.put(this.rest_api + '/recruitments', recruitment, this.httpOptions);
+    return this.http.put(this.rest_api + 'recruitments', recruitment, this.httpOptions);
   }
 
 }
