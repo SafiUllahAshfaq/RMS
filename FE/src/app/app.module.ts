@@ -13,29 +13,32 @@ import { MatButtonModule, MatNativeDateModule, MatDatepickerModule, MatFormField
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatDialogModule } from '@angular/material';
 import { MatSnackBarModule } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+import { PipesModule } from "./shared/pipes/pipes.module";
 import { RecruitmentsService } from './services/recruitments.service';
 
 import { AddRecruitmentComponent } from './recruitments/add-recruitment/add-recruitment.component';
 import { ViewRecruitmentComponent } from './recruitments/view-recruitment/view-recruitment.component';
-import { EditRecruitmentComponent } from './recruitments/edit-recruitment/edit-recruitment.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
     AddRecruitmentComponent,
-    ViewRecruitmentComponent,
-    EditRecruitmentComponent
+    ViewRecruitmentComponent
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
+    PipesModule,
     MatSnackBarModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    NoopAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,

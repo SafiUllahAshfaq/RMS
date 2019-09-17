@@ -28,17 +28,27 @@
   }
 
   .w-50{
-    width: 49%
+    width: 48%
   }
 
   .ml-2{
-    margin-left: 2%
+    margin-left: 0%
   }
 
   .section-title {
     border: 1px solid;
-    border-radius: 0px;
+    border-radius: 2px;
+    padding: 6px;
     border-color: rgba(0, 0, 0, .12);
+  }
+
+  .font-weight-500{
+    font-weight: 600;
+  }
+
+  .img-size{
+    width: 100px;
+    height: 100px;
   }
 
   .label-margin {

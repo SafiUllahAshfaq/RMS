@@ -9,9 +9,6 @@
 
                 <div class="section-title px-8">
                     <span class="text-uppercase font-weight-500 p-12" fxFlex="90">Candidate Information</span>
-                    <button mat-icon-button fxFlex="10" type="button" (click)="openTechnicalCompetenciesDialog()">
-                        <mat-icon>edit</mat-icon>
-                    </button>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
                     <mat-form-field class="w-50">
@@ -24,7 +21,7 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="w-50 ml-2">
+                    <mat-form-field class="w-50 ">
                         <input matInput placeholder="Position" formControlName="candidatePosition" required>
                         <mat-error *ngIf="formErrors.candidatePosition.required">
                             Candidate Position is required!
@@ -37,9 +34,6 @@
 
                 <div class="section-title px-8">
                     <span class="text-uppercase font-weight-500 p-12" fxFlex="90">Interview Assessment</span>
-                    <button mat-icon-button fxFlex="10" type="button" (click)="openTechnicalCompetenciesDialog()">
-                        <mat-icon>edit</mat-icon>
-                    </button>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
                     <div class="w-100">
@@ -86,9 +80,6 @@
 
                 <div class="section-title px-8">
                     <span class="text-uppercase font-weight-500 p-12" fxFlex="90">Personal and Technical traits</span>
-                    <button mat-icon-button fxFlex="10" type="button" (click)="openTechnicalCompetenciesDialog()">
-                        <mat-icon>edit</mat-icon>
-                    </button>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
                     <div class="w-100">
@@ -273,15 +264,6 @@
                     </div>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div  class="w-100">
-                        <input hidden type="file" (change)="uploadFile($event)" accept="application/pdf" #fileInput/>
-                        <button mat-raised-button class="upload-button mat-basic" type="button" (click)="fileInput.click()">
-                            Upload File
-                        </button>
-                        <div class="upload-info" *ngIf="resumeInfo.file_name">{{ resumeInfo.file_name }} ({{ resumeInfo.file_size }})</div>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
                     <mat-form-field class="w-100">
                         <input matInput placeholder="Score Obtained" formControlName="scoreObtained" required>
                         <mat-error *ngIf="formErrors.scoreObtained.required">
@@ -323,9 +305,6 @@
 
                 <div class="section-title px-8">
                     <span class="text-uppercase font-weight-500 p-12" fxFlex="90">Interviewer</span>
-                    <button mat-icon-button fxFlex="10" type="button" (click)="openTechnicalCompetenciesDialog()">
-                        <mat-icon>edit</mat-icon>
-                    </button>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
                     <mat-form-field class="w-50">
@@ -338,7 +317,7 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="w-50 ml-2">
+                    <mat-form-field class="w-50 ">
                         <input matInput placeholder="Designation" formControlName="interviewerDesignation" required>
                         <mat-error *ngIf="formErrors.interviewerDesignation.required">
                             interviewer Designation is required!
@@ -365,9 +344,6 @@
 
                 <div class="section-title px-8">
                     <span class="text-uppercase font-weight-500 p-12" fxFlex="90">Hiring Authority Remarks</span>
-                    <button mat-icon-button fxFlex="10" type="button" (click)="openTechnicalCompetenciesDialog()">
-                        <mat-icon>edit</mat-icon>
-                    </button>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
                     <mat-form-field class="w-50">
@@ -380,7 +356,7 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="w-50 ml-2">
+                    <mat-form-field class="w-50 ">
                         <input matInput placeholder="Salary" formControlName="salary" required>
                         <mat-error *ngIf="formErrors.salary.required">
                             Salary is required!
@@ -403,7 +379,7 @@
                             Only 50 characters are allowed!
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field class="w-50 ml-2">
+                    <mat-form-field class="w-50 ">
                         <textarea matInput placeholder="Other Benefits" formControlName="otherBenefits" required></textarea>
                         <mat-error *ngIf="formErrors.otherBenefits.required">
                             Other Benefits is required!
@@ -417,7 +393,7 @@
                 </div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
                     <mat-form-field class="w-50">
-                        <input matInput placeholder="Date" type="date" formControlName="date"required>
+                        <input matInput placeholder="Date" type="date" formControlName="date" required>
                         <mat-error *ngIf="formErrors.date.required">
                             Date is required!
                         </mat-error>
@@ -425,7 +401,7 @@
                             Only 50 characters are allowed!
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field class="w-50 ml-2">
+                    <mat-form-field class="w-50 ">
                         <textarea matInput placeholder="Hiring Authority Signature" formControlName="hiringAuthoritySignature" required></textarea>
                         <mat-error *ngIf="formErrors.hiringAuthoritySignature.required">
                             Hiring Authority Signature is required!
@@ -444,6 +420,20 @@
                     <button mat-raised-button type="submit" color="accent">
                         Save
                     </button>
+                </div>
+
+                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" *ngIf="recruitmentSaved">
+                    <div class="w-50">
+                        <input hidden type="file" (change)="uploadFile($event)" accept="application/pdf" #fileInput/>
+                        <button mat-raised-button class="upload-button mat-basic" type="button" (click)="fileInput.click()">
+                            Upload File
+                        </button>
+                        <div class="upload-info" *ngIf="resumeInfo.file_name">{{ resumeInfo.file_name }} ({{ resumeInfo.file_size }})</div>
+                    </div>
+                    <div class="w-50">
+                        <input hidden type="file" (change)="uploadImage($event)" accept="image/*" #imageInput/>
+                        <img class="img-size" (click)="imageInput.click()" [src]="imageInfo.USER_FILE_SRC | safeUrl">
+                    </div>
                 </div>
 
             </form>

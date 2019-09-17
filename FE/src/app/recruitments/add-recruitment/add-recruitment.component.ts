@@ -80,12 +80,17 @@ export class AddRecruitmentComponent implements OnInit {
       date: ['', [Validators.required, Validators.maxLength(50)]],
       hiringAuthoritySignature: [''],
     });
+    if(!this.imageUploaded){
+      this.imageInfo.USER_FILE_SRC = "assets/images/profile.jpg";
+    }
   }
 
   recruitmentForm: FormGroup;
   formErrors: any;
   resumeInfo: any = {};
+  imageInfo: any = {};
   uploaded_files: any = [];
+  recruitmentSaved: boolean = false;
   resumeUploaded: boolean = false;
   imageUploaded: boolean = false;
 
@@ -106,6 +111,7 @@ export class AddRecruitmentComponent implements OnInit {
 
   addRecruitment(){
     console.log(this.recruitmentForm.value);
+    this.recruitmentSaved = true;
   }
 
   uploadFile(event) {
@@ -126,6 +132,30 @@ export class AddRecruitmentComponent implements OnInit {
       }
       else {
         let message = "File must have a size of less then 50 MB & Name of file must be less then 50 characters";
+        this.snackBar.open(message, '', {
+          duration: 3000
+        });
+      }
+    }
+  }
+
+  uploadImage(event) {
+    if (event.target.files[0]) {
+      let name_length = event.target.files[0].name.length;
+      let file_size = event.target.files[0].size / 1000000;
+
+      if (name_length <= 30 && file_size <= 50 && event.target.files[0].type.indexOf('image') !== -1) {
+        this.imageUploaded = true;
+
+        this.imageInfo.USER_FILE_SRC = URL.createObjectURL(event.target.files[0]);
+        this.imageInfo.USER_FILE_TYPE = event.target.files[0].type;
+        this.imageInfo.USER_FILE_NAME = event.target.files[0].name;
+        this.imageInfo.USER_FILE_SIZE = file_size;
+
+        //this.uploaded_images = Object.assign([], event.target.files);
+      }
+      else {
+        let message = "File must have a size of less then 50 MB & Name of file must be less then 30 characters";
         this.snackBar.open(message, '', {
           duration: 3000
         });
