@@ -1,10 +1,11 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const environment = require('../environment');
 
-mongoose.connect('mongodb://localhost:27017/RMSDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+const mongo = mongoose.connect(
+  environment.mongodburl,
+  environment.mongodbConfig
+);
 
-module.exports = mongoose;
+module.exports = mongo;

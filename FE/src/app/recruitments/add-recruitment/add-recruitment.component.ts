@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
-
-import { RecruitmentsService } from "../../services/recruitments.service";
+import { RecruitmentsService } from '../../services/recruitments.service';
 
 @Component({
   selector: 'app-add-recruitment',
@@ -33,54 +32,53 @@ export class AddRecruitmentComponent implements OnInit {
       understandingOfDevLifeCycle: {},
       teamPlayerCapability: {},
       teamLeadCapability: {},
-      suitabilityForPositionApplied: {},
-      scoreObtained:{},
-      overallEvaluation:{},
-      interviewerComments:{},
-      interviewerName:{},
+      suitabilityForAppliedPost: {},
+      scoreObtained: {},
+      overallEvaluation: {},
+      interviewerComments: {},
+      interviewerName: {},
       interviewerDesignation: {},
       recommendation: {},
       proposedDesignation: {},
-      salary:{},
+      salary: {},
       otherBenefits: {},
       location: {},
       date: {},
       hiringAuthoritySignature: {}
-    
     };
-   }
+  }
 
   ngOnInit() {
     this.recruitmentForm = this.formBuilder.group({
-      candidateName: ['', [Validators.required, Validators.maxLength(50)]],
-      candidatePosition: ['', [Validators.required, Validators.maxLength(50)]],
-      relevantEducation: ['', [Validators.required]],
-      relevantJobPersistance: ['', [Validators.required]],
-      relevantJobExperience: ['', [Validators.required]],
-      appearance: ['', [Validators.required]],
-      communicationSkills: ['', [Validators.required]],
-      basicProgrammingSkills: ['', [Validators.required]],
-      objectOrientedConcepts: ['', [Validators.required]],
-      dataStructureConcepts: ['', [Validators.required]],
-      algorithm: ['', [Validators.required]],
-      designPattern: ['', [Validators.required]],
-      programingLanguageSkills: ['', [Validators.required]],
-      analyticalSkills: ['', [Validators.required]],
-      understandingOfDevLifeCycle: ['', [Validators.required]],
-      teamPlayerCapability: ['', [Validators.required]],
-      teamLeadCapability: ['', [Validators.required]],
-      suitabilityForPositionApplied: ['', [Validators.required]],
-      scoreObtained: ['', [Validators.required, Validators.pattern('^[0-9-]*$'), Validators.maxLength(50)]],
-      overallEvaluation: ['', [Validators.required]],
-      interviewerComments: ['', [Validators.required, Validators.maxLength(500)]],
-      interviewerName: ['', [Validators.required, Validators.maxLength(50)]],
-      interviewerDesignation: ['', [Validators.required, Validators.maxLength(50)]],
-      recommendation: ['', [Validators.required]],
-      proposedDesignation: ['', [Validators.required, Validators.maxLength(50)]],
+      candidateName: ['Saad Sohail', [Validators.required, Validators.maxLength(50)]],
+      candidatePosition: ['Software Engineer', [Validators.required, Validators.maxLength(50)]],
+      relevantEducation: ['0', [Validators.required]],
+      relevantJobPersistance: ['0', [Validators.required]],
+      relevantJobExperience: ['1', [Validators.required]],
+      appearance: ['0', [Validators.required]],
+      communicationSkills: ['3', [Validators.required]],
+      basicProgrammingSkills: ['0', [Validators.required]],
+      objectOrientedConcepts: ['4', [Validators.required]],
+      dataStructureConcepts: ['0', [Validators.required]],
+      algorithm: ['3', [Validators.required]],
+      designPattern: ['4', [Validators.required]],
+      programingLanguageSkills: ['0', [Validators.required]],
+      analyticalSkills: ['4', [Validators.required]],
+      understandingOfDevLifeCycle: ['0', [Validators.required]],
+      teamPlayerCapability: ['0', [Validators.required]],
+      teamLeadCapability: ['3', [Validators.required]],
+      suitabilityForAppliedPost: ['0', [Validators.required]],
+      scoreObtained: ['20', [Validators.required, Validators.pattern('^[0-9-]*$'), Validators.maxLength(50)]],
+      overallEvaluation: ['0', [Validators.required]],
+      interviewerName: ['Fahid Sami', [Validators.required, Validators.maxLength(50)]],
+      interviewerDesignation: ['Project Manager', [Validators.required, Validators.maxLength(50)]],
+      recommendation: ['0', [Validators.required]],
+      interviewerComments: ['Has potential to learn and adopt rapidly.', [Validators.required, Validators.maxLength(500)]],
+      proposedDesignation: ['Software Engineer', [Validators.required, Validators.maxLength(50)]],
       salary: [0, [Validators.required, Validators.pattern('^[0-9-]*$'), Validators.maxLength(50)]],
-      otherBenefits: ['', [Validators.required, Validators.maxLength(500)]],
-      location: ['', [Validators.required, Validators.maxLength(50)]],
-      date: ['', [Validators.required, Validators.maxLength(50)]],
+      otherBenefits: ['Medical Benifits', [Validators.required, Validators.maxLength(500)]],
+      location: ['Lahore', [Validators.required, Validators.maxLength(50)]],
+      date: ['2019-09-19', [Validators.required, Validators.maxLength(50)]],
       hiringAuthoritySignature: [''],
     });
 
@@ -102,6 +100,7 @@ export class AddRecruitmentComponent implements OnInit {
   recruitmentSaved: boolean = false;
   resumeUploaded: boolean = false;
   imageUploaded: boolean = false;
+  fileData: any;
 
   onFormValuesChanged() {
     for (const field in this.formErrors) {
@@ -118,13 +117,19 @@ export class AddRecruitmentComponent implements OnInit {
     }
   }
 
-  addRecruitment(){
+  addRecruitment() {
     console.log(this.recruitmentForm.value);
     this.recruitmentSaved = true;
+    console.log(this.resumeInfo);
+
   }
 
   uploadFile(event) {
+
+    console.log(event.target);
+
     if (event.target.files[0]) {
+
       let name_length = event.target.files[0].name.length;
       let file_size = event.target.files[0].size / 1000000;
 
@@ -132,12 +137,21 @@ export class AddRecruitmentComponent implements OnInit {
         this.resumeUploaded = true;
         this.imageUploaded = false;
 
-        this.resumeInfo.file_src = URL.createObjectURL(event.target.files[0]);
-        this.resumeInfo.file_type = event.target.files[0].type;
-        this.resumeInfo.file_name = event.target.files[0].name;
-        this.resumeInfo.file_size = file_size;
+        this.resumeInfo.path = URL.createObjectURL(event.target.files[0]);
+        this.resumeInfo.type = event.target.files[0].type;
+        this.resumeInfo.name = event.target.files[0].name;
+        this.resumeInfo.size = file_size;
 
         this.uploaded_files = Object.assign([], event.target.files);
+        const cvFile = {
+          '_id': "5d8077090fd08d3e84b7e3ae",
+          'candidateName': 'Saad Sohail',
+          'cv': this.resumeInfo
+        };
+
+        console.log(cvFile);
+
+        this.uploadCadidateCv(cvFile);
       }
       else {
         let message = "File must have a size of less then 50 MB & Name of file must be less then 50 characters";
@@ -171,5 +185,10 @@ export class AddRecruitmentComponent implements OnInit {
       }
     }
   }
-
+  
+  uploadCadidateCv(cvFile) {
+    this.recruitmentService.uploadCadidateCv(cvFile).subscribe(res => {
+      console.log(res);
+    })
+  }
 }

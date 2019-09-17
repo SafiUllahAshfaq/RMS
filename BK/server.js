@@ -1,9 +1,12 @@
 const Koa = require('koa');
-const bodyParser = require('koa-bodyparser')();
+const koaBody = require('koa-body');
 const Router = require('koa-router');
 // const cors = require('@koa/cors')(/* Add your cors option */);
-require('./config/database');
 const logger = require('koa-logger')();
+const serve = require('koa-static');
+var cors = require('koa-cors');
+
+require('./config/database');
 
 const errorHandler = require('./middleware/error.middleware');
 const candidate = require('./api/candidate/candidate.routes');
@@ -13,11 +16,17 @@ const router = new Router();
 
 const PORT = process.env.PORT || 500;
 
-server.use(logger);
-
 server
+  .use(logger)
+  .use(cors())
   .use(errorHandler)
-  .use(bodyParser)
+  .use(serve(__dirname + '/uploads'))
+  .use(
+    koaBody({
+      multipart: true,
+      urlencoded: true
+    })
+  )
   .use(candidate.routes())
   .use(router.allowedMethods());
 
