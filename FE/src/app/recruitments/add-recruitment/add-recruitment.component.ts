@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 
+import { RecruitmentsService } from "../../services/recruitments.service";
+
 @Component({
   selector: 'app-add-recruitment',
   templateUrl: './add-recruitment.component.html',
@@ -10,7 +12,8 @@ import { Router } from '@angular/router';
 })
 export class AddRecruitmentComponent implements OnInit {
 
-  constructor(private router: Router, private formBuilder: FormBuilder,private snackBar: MatSnackBar) {
+  constructor(private router: Router, private formBuilder: FormBuilder,private snackBar: MatSnackBar,
+    private recruitmentService: RecruitmentsService) {
 
     this.formErrors = {
       candidateName: {},
@@ -80,9 +83,15 @@ export class AddRecruitmentComponent implements OnInit {
       date: ['', [Validators.required, Validators.maxLength(50)]],
       hiringAuthoritySignature: [''],
     });
+
     if(!this.imageUploaded){
       this.imageInfo.USER_FILE_SRC = "assets/images/profile.jpg";
     }
+
+    this.recruitmentService.selected_recruitment.subscribe(recruitment => {
+      //this.recruitmentForm = recruitment;
+      console.log(recruitment);
+    });
   }
 
   recruitmentForm: FormGroup;

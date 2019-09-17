@@ -39,12 +39,13 @@ export class ViewRecruitmentComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  editRecruitment(element){
+  editRecruitment(recruitment){
     this.router.navigateByUrl('recruitment/form');
+    this.recruitmentService.change_recruitment(recruitment);
   }
 
-  deleteRecruitment(element){
-    console.log(element);
+  deleteRecruitment(recruitment){
+    console.log(recruitment);
     //this.router.navigateByUrl('recruitments');
     // this.departmentService.deleteDepartment(dep)
     //   .subscribe(result => {
