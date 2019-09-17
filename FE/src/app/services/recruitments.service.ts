@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
+import { IRecruitmentForm } from '../models/interface';
 
 @Injectable({
   providedIn: 'root'
@@ -24,16 +25,17 @@ export class RecruitmentsService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  getObservableRecruitments(): Observable<any> {
-    return this.http.get(this.rest_api + 'recruitments');
+  getAllRecruitments(): Observable<any> {
+    return this.http.get(this.rest_api + 'allevaluations');
   }
 
   getrecruitment(recruitment): Observable<any> {
     return this.http.post(this.rest_api + 'recruitments/id', recruitment, this.httpOptions);
   }
 
-  postEvaluation(evaluationForm): Observable<any> {
-    return this.http.post(this.rest_api + 'recruitments', evaluationForm, this.httpOptions);
+  postEvaluation(evaluationForm: IRecruitmentForm): Observable<any> {
+    console.log(evaluationForm);
+    return this.http.post(this.rest_api + 'postevaluation', evaluationForm, this.httpOptions);
   }
 
   uploadCadidateCv(cvFile): Observable<any> {

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { RecruitmentsService } from '../../services/recruitments.service';
+import { IRecruitmentForm, ICandidate, IInterviewer, IPersonalAndTechnicalTraits, IInterviewerAssessment, IHiringAuthorityRemarks } from '../../models/interface';
 
 @Component({
   selector: 'app-add-recruitment',
@@ -11,7 +12,7 @@ import { RecruitmentsService } from '../../services/recruitments.service';
 })
 export class AddRecruitmentComponent implements OnInit {
 
-  constructor(private router: Router, private formBuilder: FormBuilder,private snackBar: MatSnackBar,
+  constructor(private router: Router, private formBuilder: FormBuilder, private snackBar: MatSnackBar,
     private recruitmentService: RecruitmentsService) {
 
     this.formErrors = {
@@ -82,7 +83,7 @@ export class AddRecruitmentComponent implements OnInit {
       hiringAuthoritySignature: [''],
     });
 
-    if(!this.imageUploaded){
+    if (!this.imageUploaded) {
       this.imageInfo.USER_FILE_SRC = "assets/images/profile.jpg";
     }
 
@@ -96,7 +97,7 @@ export class AddRecruitmentComponent implements OnInit {
   formErrors: any;
   resumeInfo: any = {};
   imageInfo: any = {};
-  uploaded_files: any = [];
+  uploadedFiles: any = [];
   recruitmentSaved: boolean = false;
   resumeUploaded: boolean = false;
   imageUploaded: boolean = false;
@@ -117,11 +118,62 @@ export class AddRecruitmentComponent implements OnInit {
     }
   }
 
-  addRecruitment() {
-    console.log(this.recruitmentForm.value);
+  async addRecruitment() {
+    const values = this.recruitmentForm.value;
+    const candidateInformation: ICandidate = {
+      "name": values.candidateName,
+      "postAppliedFor": values.candidatePosition
+    }
+    const interviewerAssesment: IInterviewerAssessment = {
+      "education": values.relevantEducation,
+      "jobPersistance": values.relevantJobPersistance,
+      "jobExpreience": values.relevantJobExperience
+    }
+    const personalAndTechnicalTraits: IPersonalAndTechnicalTraits = {
+      "appearance": values.appearance,
+      "communicationSkills": values.communicationSkills,
+      "programmingSkills": values.basicProgrammingSkills,
+      "oopConcepts": values.objectOrientedConcepts,
+      "dataStructureConcepts": values.dataStructureConcepts,
+      "algorithms": values.algorithm,
+      "designPattern": values.designPattern,
+      "programmingLanguageSkills": values.programingLanguageSkills,
+      "analyticalSkills": values.analyticalSkills,
+      "understandingOfdevLifeCycle": values.understandingOfDevLifeCycle,
+      "teamPlayerCapability": values.teamPlayerCapability,
+      "teamLeadCapability": values.teamLeadCapability,
+      "suitabilityForAppliedPost": values.suitabilityForAppliedPost,
+      "scoreObtained": values.scoreObtained,
+      "overAllEvaluation": values.overallEvaluation
+    }
+    const interviewer: IInterviewer = {
+      "name": values.interviewerName,
+      "designation": values.interviewerDesignation,
+      "recommendation": values.recommendation,
+      "comments": values.interviewerComments
+    }
+    const hiringAuthorityRemarks: IHiringAuthorityRemarks = {
+      "proposedDesignation": values.proposedDesignation,
+      "salary": values.salary,
+      "otherBenifits": values.otherBenefits,
+      "location": values.location,
+      "date": values.date
+    }
+    const payload: IRecruitmentForm = {
+      candidateInformation,
+      interviewerAssesment,
+      personalAndTechnicalTraits,
+      interviewer,
+      hiringAuthorityRemarks
+    }
+    console.log(payload);
+    await this.recruitmentService.postEvaluation(payload).subscribe(res => {
+      console.log(res);
+      // this.recruitmentForm.reset();
+      this.snackBar.open('Recruitment Added Successfully!!', '', { duration: 3000 });
+    });
+    this.router.navigateByUrl('recruitments');
     this.recruitmentSaved = true;
-    console.log(this.resumeInfo);
-
   }
 
   uploadFile(event) {
@@ -142,7 +194,7 @@ export class AddRecruitmentComponent implements OnInit {
         this.resumeInfo.name = event.target.files[0].name;
         this.resumeInfo.size = file_size;
 
-        this.uploaded_files = Object.assign([], event.target.files);
+        this.uploadedFiles = Object.assign([], event.target.files);
         const cvFile = {
           '_id': "5d8077090fd08d3e84b7e3ae",
           'candidateName': 'Saad Sohail',
@@ -185,7 +237,7 @@ export class AddRecruitmentComponent implements OnInit {
       }
     }
   }
-  
+
   uploadCadidateCv(cvFile) {
     this.recruitmentService.uploadCadidateCv(cvFile).subscribe(res => {
       console.log(res);

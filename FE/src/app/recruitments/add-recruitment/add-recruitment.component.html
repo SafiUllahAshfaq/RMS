@@ -263,7 +263,7 @@
                         </mat-error>
                     </div>
                 </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                <!-- <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
                     <div class="w-100">
                         <input hidden type="file" (change)="uploadFile($event)" accept="application/pdf" #fileInput/>
                         <button mat-raised-button class="upload-button mat-basic" type="button" (click)="fileInput.click()">
@@ -271,7 +271,7 @@
                         </button>
                         <div class="upload-info" *ngIf="resumeInfo.name">{{ resumeInfo.name }} ({{ resumeInfo.size }})</div>
                     </div>
-                </div>
+                </div> -->
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
                     <mat-form-field class="w-100">
                         <input matInput placeholder="Score Obtained" type="number" formControlName="scoreObtained">

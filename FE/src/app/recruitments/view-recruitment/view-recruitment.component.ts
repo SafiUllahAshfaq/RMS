@@ -1,24 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 import { RecruitmentsService } from "../../services/recruitments.service";
+import { IRecruitmentForm } from '../../models/interface';
 
 export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: string;
-  symbol: string;
-  extra: string;
+  sno: number;
+  candidateName: string;
+  postAppliedFor: string;
+  candidateLocation: string;
+  interviewerName: string;
+  candiateCv: string;
 }
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Saad Sohail', weight: 'Siddique Trade Center', symbol: 'Saad_Resume.pdf', extra:"nsankna"},
-  {position: 2, name: 'Waleed Ali', weight: 'Siddique Trade Center', symbol: 'Waleed_Resume.pdf', extra:"nsankna"},
-  {position: 3, name: 'SaifUllah', weight: 'Siddique Trade Center', symbol: 'SaifUllah_Resume.pdf', extra:"nsankna"},
-  {position: 4, name: 'Saad Rehman', weight: 'Siddique Trade Center', symbol: 'SaadRehman_Resume.pdf', extra:"nsankna"}
-];
 
 @Component({
   selector: 'app-view-recruitment',
@@ -26,25 +21,35 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./view-recruitment.component.scss']
 })
 export class ViewRecruitmentComponent implements OnInit {
-
+  recruitments: [IRecruitmentForm];
+  dataSource: any;
+  displayedColumns: string[];
   constructor(private router: Router, private recruitmentService: RecruitmentsService, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
+    this.getAllRecruitments();
+    this.displayedColumns = ['candidateName', 'candiateCv', 'interviewerName', 'interviewerDesignation', 'interviewDate', 'action'];
   }
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'action'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  getAllRecruitments() {
+    this.recruitmentService.getAllRecruitments().subscribe(recruitmentRecords => {
+      this.recruitments = recruitmentRecords;
+      this.dataSource = new MatTableDataSource(this.recruitments);
+    });
+  }
+
 
   applyFilter(filterValue: string) {
+    console.log(filterValue.trim().toLowerCase());
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  editRecruitment(recruitment){
+  editRecruitment(recruitment) {
     this.router.navigateByUrl('recruitment/form');
     this.recruitmentService.change_recruitment(recruitment);
   }
 
-  deleteRecruitment(recruitment){
+  deleteRecruitment(recruitment) {
     console.log(recruitment);
     //this.router.navigateByUrl('recruitments');
     // this.departmentService.deleteDepartment(dep)
@@ -86,7 +91,7 @@ export class ViewRecruitmentComponent implements OnInit {
     //     });
     // });
   }
- 
-  
-  
+
+
+
 }

@@ -26,6 +26,7 @@ export interface IPersonalAndTechnicalTraits {
     communicationSkills: EThreePointEstimate;
     programmingSkills: EThreePointEstimate;
     oopConcepts: EThreePointEstimate;
+    dataStructureConcepts: EThreePointEstimate;
     algorithms: EThreePointEstimate;
     designPattern: EThreePointEstimate;
     programmingLanguageSkills: EThreePointEstimate;
@@ -34,8 +35,8 @@ export interface IPersonalAndTechnicalTraits {
     teamPlayerCapability: EThreePointEstimate;
     teamLeadCapability: EThreePointEstimate;
     suitabilityForAppliedPost: EThreePointEstimate;
-    picture: string;
-    cv: string;
+    picture?: string;
+    cv?: string;
     scoreObtained?: number;
     overAllEvaluation?: EOverAllEvaluation;
 }
@@ -43,7 +44,8 @@ export interface IPersonalAndTechnicalTraits {
 export interface IInterviewer {
     name: string;
     designation: string;
-    recommendation: ERecommendation
+    recommendation: ERecommendation;
+    comments: string;
 }
 
 export interface IHiringAuthorityRemarks {
