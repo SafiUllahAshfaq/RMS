@@ -111,6 +111,7 @@ export class AddRecruitmentComponent implements OnInit {
         hiringAuthoritySignature: ['']
       })
     });
+    this.harHiringAuthoritySignature.disable();
 
     this.harHiringAuthoritySignature.disable();
 
