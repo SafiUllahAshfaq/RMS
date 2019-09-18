@@ -8,13 +8,13 @@ const router = require('koa-router')({
 router
   .get('/allevaluations', controller.getAllEvaluations)
   .get('/getEvaluation/:id', controller.getEvaluation)
-  .patch('/updateevaluation', controller.updateEvaluation)
+  .put('/updateevaluation', controller.updateEvaluation)
   .post('/postevaluation', controller.postEvaluation)
   .delete('/deleteevaluation/:id', controller.deleteEvaluation)
   .post('/uploadcadidateimage', controller.uploadCadidateImage)
   .get('/getcandidateimage/:id', controller.getCandidateImage)
   .delete('/deletecandidateimage/:id', controller.deleteCandidateImage)
   .post('/uploadcadidatecv', controller.uploadCadidateCv)
-  .get('/getcandidatecv/:id', controller.getCandidateCv);
+  .post('/getcandidatecv', controller.getCandidateCv);
 
 module.exports = router;

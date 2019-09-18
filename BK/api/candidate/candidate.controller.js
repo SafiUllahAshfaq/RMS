@@ -1,8 +1,8 @@
 'use strict';
 
 const path = require('path');
-const send = require('koa-send');
 const fs = require('fs');
+const send = require('koa-send');
 
 const { RecruitmentForm } = require('../../models/recruitmentform.model');
 
@@ -10,7 +10,10 @@ const imagesPath = 'uploads/images/candidate/profile/';
 const cvsPath = 'uploads/documents/candidate/cv/';
 
 exports.uploadCadidateImage = async (ctx, next) => {
-  const id = ctx.request.body._id;
+
+  // this
+
+  const id = ctx.request.body.id;
   const file = ctx.request.files.profilePicture;
   const reader = fs.createReadStream(file.path);
   // const [name, type] = file.name.split('.');
@@ -22,6 +25,20 @@ exports.uploadCadidateImage = async (ctx, next) => {
   })
   ctx.body = ctx.request.files;
   next();
+}
+
+function saveFile(id) {
+  return new Promise(function (resolve) {
+    let path = path.join(imagesPath, id + ".jpg");
+    console.log(path);
+    if (fs.existsSync(path)) {
+      resolve(fs.createReadStream(path));
+    } else {
+      resolve(null)
+    }
+  }).catch(function (error) {
+    return error
+  });
 }
 
 
@@ -78,8 +95,8 @@ exports.uploadCadidateCv = async (ctx, next) => {
 }
 
 exports.getCandidateCv = async (ctx, next) => {
-  const id = ctx.params.id;
-  const candidateName = ctx.params.candidateName;
+  const id = ctx.request.body.id;
+  const candidateName = ctx.request.body.candidateName.replace(" ", "").toLowerCase();
   await send(ctx, cvsPath + candidateName + "_" + id + ".pdf");
   next();
 };
@@ -133,6 +150,8 @@ exports.updateEvaluation = async (ctx, next) => {
   const id = document._id;
   delete document._id;
   const config = { new: true, useFindAndModify: true };
+  console.log(document);
+
   await RecruitmentForm.findByIdAndUpdate(id, document, config)
     .then(result => {
       ctx.body = result;

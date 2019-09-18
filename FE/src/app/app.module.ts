@@ -10,8 +10,7 @@ import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
 
 import {
   MatButtonModule, MatNativeDateModule, MatDatepickerModule, MatFormFieldModule, MatIconModule, MatInputModule,
-  MatSelectModule, MatStepperModule, MatRadioModule, MatTableDataSource, MatTableModule
-} from '@angular/material';
+  MatSelectModule, MatStepperModule, MatRadioModule, MatTableModule, MatPaginatorModule} from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatDialogModule } from '@angular/material';
 import { MatSnackBarModule } from '@angular/material';
@@ -57,6 +56,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatButtonModule,
     MatIconModule,
     MatTableModule,
+    MatPaginatorModule,
     SlimLoadingBarModule
   ],
   providers: [

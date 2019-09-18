@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
+import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
 import { NavigationCancel, Event, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
+import { RecruitmentsService } from './services/recruitments.service';
 
 @Component({
   selector: 'app-root',
@@ -11,15 +12,15 @@ import { MatSnackBar } from '@angular/material';
 })
 
 export class AppComponent {
-  constructor( private router: Router, private loadingBar: SlimLoadingBarService, private formBuilder: FormBuilder,
-     private snackBar: MatSnackBar) {
+  constructor(private router: Router, private loadingBar: SlimLoadingBarService, private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar, private recruitmentService: RecruitmentsService) {
 
     this.router.events.subscribe((event: Event) => {
       this.navigationInterceptor(event);
     });
   }
 
-  ngOnInit(){
+  ngOnInit() {
   }
 
   title = 'rms';
@@ -37,5 +38,10 @@ export class AppComponent {
     if (event instanceof NavigationError) {
       this.loadingBar.stop();
     }
+  }
+
+  addRecruitment() {
+    this.recruitmentService.change_recruitment({});
+    this.router.navigateByUrl('/recruitment/form');
   }
 }

@@ -1,8 +1,8 @@
 export enum EThreePointEstimate {
+    notApplicable = 0,
     fair = 1,
     satisfactory = 3,
-    good = 4,
-    notApplicable = 0
+    good = 4
 }
 
 export enum ERecommendation {

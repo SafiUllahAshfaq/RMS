@@ -50,9 +50,12 @@ export interface IInterviewer {
 
 export interface IHiringAuthorityRemarks {
     proposedDesignation: string,
-    salary: number,
+    noticePeriod: number,
+    currentSalary: number,
+    expectedSalary: number,
     otherBenifits: string,
     location: string,
     date: Date
 }
 
+export interface IScoringFields extends IPersonalAndTechnicalTraits, IInterviewerAssessment { }

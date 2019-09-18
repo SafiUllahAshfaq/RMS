@@ -52,7 +52,9 @@ const RecruitmentFormSchema = new Schema({
   },
   hiringAuthorityRemarks: {
     proposedDesignation: config.requiredString,
-    salary: config.requiredString,
+    noticePeriod: config.requiredNumber,
+    currentSalary: config.requiredNumber,
+    expectedSalary: config.requiredNumber,
     otherBenifits: config.requiredString,
     location: config.requiredString,
     date: config.requiredDate
