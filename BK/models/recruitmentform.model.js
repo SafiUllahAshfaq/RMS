@@ -14,13 +14,18 @@ const config = {
   requiredDate: {
     type: Date,
     required: true
+  },
+  optionalString: {
+    type: String
   }
 }
 
 const RecruitmentFormSchema = new Schema({
   candidateInformation: {
     name: config.requiredString,
-    postAppliedFor: config.requiredString
+    postAppliedFor: config.requiredString,
+    picture: config.optionalString,
+    cv: config.optionalString
   },
   interviewerAssesment: {
     education: config.requiredNumber,
@@ -41,8 +46,10 @@ const RecruitmentFormSchema = new Schema({
     teamPlayerCapability: config.requiredNumber,
     teamLeadCapability: config.requiredNumber,
     suitabilityForAppliedPost: config.requiredNumber,
+  },
+  finalScoring: {
     scoreObtained: config.requiredNumber,
-    overAllEvaluation: config.requiredString
+    overallEvaluation: config.requiredString
   },
   interviewer: {
     name: config.requiredString,
@@ -52,7 +59,9 @@ const RecruitmentFormSchema = new Schema({
   },
   hiringAuthorityRemarks: {
     proposedDesignation: config.requiredString,
-    salary: config.requiredString,
+    noticePeriod: config.requiredNumber,
+    currentSalary: config.requiredNumber,
+    expectedSalary: config.requiredNumber,
     otherBenifits: config.requiredString,
     location: config.requiredString,
     date: config.requiredDate

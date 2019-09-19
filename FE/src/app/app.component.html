@@ -1,11 +1,30 @@
 <ng2-slim-loading-bar color="blue"></ng2-slim-loading-bar>
+
+<nav class="navbar navbar-expand-lg bg-thd">
+  <div class="container">
+    <div class="row w-100">
+      <div class="d-flex flex-grow-1">
+        <div class="p-2 mr-auto p-2">
+          <img class="img-fluid img-height" src="../assets/images/thd_logo.png">
+        </div>
+        <div class="p-2 d-flex align-items-center">
+          <button class="button-width btn btn-outline-light" type="button"
+            [routerLink]="['/recruitments']">
+            Recruitments List
+          </button>
+        </div>
+        <div class="p-2 d-flex align-items-center">
+          <button class="button-width btn btn-outline-light" type="button" (click)="addRecruitment()">
+            Add Recruitments
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
 <div class="d-flex justify-content-center m-4">
-  <button class="button-width btn btn-outline-success" type="button" color="primary" [routerLink]="['/recruitments']">
-    Recruitments List
-  </button>
-  <button class="button-width btn btn-outline-success" type="button" color="primary" [routerLink]="['/recruitment/form']">
-    Add Recruitments
-  </button>
 </div>
 <div class="container">
   <router-outlet></router-outlet>

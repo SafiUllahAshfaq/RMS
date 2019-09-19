@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { IRecruitmentForm } from '../models/interface';
 
+import { saveAs } from 'file-saver';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,6 +14,7 @@ export class RecruitmentsService {
   }
 
   rest_api = 'http://localhost:500/candidate/';
+  // rest_api = 'http://192.168.20.11:500/candidate/';
   recruitment = new BehaviorSubject<any>({});
   selected_recruitment = this.recruitment.asObservable();
 
@@ -32,7 +35,7 @@ export class RecruitmentsService {
   }
 
   addRecruitment(evaluationForm: IRecruitmentForm): Observable<any> {
-    console.log(evaluationForm);
+    console.log(evaluationForm); // muneeb
     return this.http.post(this.rest_api + 'postevaluation', evaluationForm, this.httpOptions);
   }
 
@@ -46,6 +49,19 @@ export class RecruitmentsService {
     return this.http.post(this.rest_api + 'uploadcadidatecv', formData);
   }
 
+  uploadCadidateImage(imageFile): Observable<any> {
+    console.log(imageFile);
+    const formData: FormData = new FormData();
+    formData.append('profilePicture', imageFile);
+    console.log(formData);
+
+    const httpUploadHeaders = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' })
+    }
+
+    return this.http.post(this.rest_api + 'uploadcadidateimage', formData, httpUploadHeaders);
+  }
+
   deleteRecruitment(candidateId): Observable<any> {
     return this.http.delete(this.rest_api + `deleteevaluation/${candidateId}`, this.httpOptions);
   }
@@ -55,10 +71,14 @@ export class RecruitmentsService {
   }
 
   getCandidateCv(payload) {
-    this.http.post(this.rest_api + 'getcandidatecv', payload).subscribe(res => {
-      console.log('img: ', res);
+    const fileName = payload.candidateName.replace(' ', '').trim() + '_' + payload.id;
+    this.http.post(this.rest_api + 'getcandidatecv', payload, {
+      responseType: "blob",
+      headers: new HttpHeaders().append("Content-Type", "application/json")
+    }).subscribe(res => {
+      saveAs(res, fileName);
     }, error => {
-      console.log(error);
+      console.error(error);
     })
   }
 

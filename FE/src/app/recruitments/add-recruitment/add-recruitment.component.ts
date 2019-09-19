@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { RecruitmentsService } from '../../services/recruitments.service';
-import { IRecruitmentForm, ICandidate, IInterviewer, IPersonalAndTechnicalTraits, IInterviewerAssessment, IHiringAuthorityRemarks } from '../../models/interface';
+import { IRecruitmentForm, ICandidate, IInterviewer, IPersonalAndTechnicalTraits, IInterviewerAssessment, IHiringAuthorityRemarks, IScoringFields, IFinalScoring } from '../../models/interface';
 
 @Component({
   selector: 'app-add-recruitment',
@@ -13,40 +13,8 @@ import { IRecruitmentForm, ICandidate, IInterviewer, IPersonalAndTechnicalTraits
 export class AddRecruitmentComponent implements OnInit {
 
   constructor(private router: Router, private formBuilder: FormBuilder, private snackBar: MatSnackBar,
-    private recruitmentService: RecruitmentsService) {
+    private recruitmentService: RecruitmentsService, private route: ActivatedRoute) {
 
-    this.formErrors = {
-      candidateName: {},
-      candidatePosition: {},
-      relevantEducation: {},
-      relevantJobPersistance: {},
-      relevantJobExperience: {},
-      appearance: {},
-      communicationSkills: {},
-      basicProgrammingSkills: {},
-      objectOrientedConcepts: {},
-      dataStructureConcepts: {},
-      algorithm: {},
-      designPattern: {},
-      programingLanguageSkills: {},
-      analyticalSkills: {},
-      understandingOfDevLifeCycle: {},
-      teamPlayerCapability: {},
-      teamLeadCapability: {},
-      suitabilityForAppliedPost: {},
-      scoreObtained: {},
-      overallEvaluation: {},
-      interviewerComments: {},
-      interviewerName: {},
-      interviewerDesignation: {},
-      recommendation: {},
-      proposedDesignation: {},
-      salary: {},
-      otherBenefits: {},
-      location: {},
-      date: {},
-      hiringAuthoritySignature: {}
-    };
   }
 
   recruitmentForm: FormGroup;
@@ -60,163 +28,234 @@ export class AddRecruitmentComponent implements OnInit {
   fileData: any;
   isNewForm: boolean = true;
   candidateId: string = '';
+  minDate: Date = new Date();
+  totalScore: number = 0;
+  isFormEdited: boolean = false;
 
   ngOnInit() {
     this.recruitmentForm = this.formBuilder.group({
-      candidateName: ['Saad Sohail', [Validators.required, Validators.maxLength(50)]],
-      candidatePosition: ['Software Engineer', [Validators.required, Validators.maxLength(50)]],
-      relevantEducation: ['0', [Validators.required]],
-      relevantJobPersistance: ['0', [Validators.required]],
-      relevantJobExperience: ['1', [Validators.required]],
-      appearance: ['0', [Validators.required]],
-      communicationSkills: ['3', [Validators.required]],
-      basicProgrammingSkills: ['0', [Validators.required]],
-      objectOrientedConcepts: ['4', [Validators.required]],
-      dataStructureConcepts: ['0', [Validators.required]],
-      algorithm: ['3', [Validators.required]],
-      designPattern: ['4', [Validators.required]],
-      programingLanguageSkills: ['0', [Validators.required]],
-      analyticalSkills: ['4', [Validators.required]],
-      understandingOfDevLifeCycle: ['0', [Validators.required]],
-      teamPlayerCapability: ['0', [Validators.required]],
-      teamLeadCapability: ['3', [Validators.required]],
-      suitabilityForAppliedPost: ['0', [Validators.required]],
-      scoreObtained: ['20', [Validators.required, Validators.pattern('^[0-9-]*$'), Validators.maxLength(50)]],
-      overallEvaluation: ['0', [Validators.required]],
-      interviewerName: ['Fahid Sami', [Validators.required, Validators.maxLength(50)]],
-      interviewerDesignation: ['Project Manager', [Validators.required, Validators.maxLength(50)]],
-      recommendation: ['0', [Validators.required]],
-      interviewerComments: ['Has potential to learn and adopt rapidly.', [Validators.required, Validators.maxLength(500)]],
-      proposedDesignation: ['Software Engineer', [Validators.required, Validators.maxLength(50)]],
-      salary: [0, [Validators.required, Validators.pattern('^[0-9-]*$'), Validators.maxLength(50)]],
-      otherBenefits: ['Medical Benifits', [Validators.required, Validators.maxLength(500)]],
-      location: ['Lahore', [Validators.required, Validators.maxLength(50)]],
-      date: ['2019-09-19', [Validators.required, Validators.maxLength(50)]],
-      hiringAuthoritySignature: ['']
+      candidateInformation: this.formBuilder.group({
+        name: ['Test', [Validators.required, Validators.maxLength(50)]],
+        postAppliedFor: ['Dev', [Validators.required, Validators.maxLength(50)]],
+        picture: [''],
+        cv: ['']
+      }),
+      interviewerAssesment: this.formBuilder.group({
+        education: ['0', [Validators.required]],
+        jobPersistance: ['0', [Validators.required]],
+        jobExpreience: ['0', [Validators.required]],
+      }),
+      personalAndTechnicalTraits: this.formBuilder.group({
+        appearance: ['0', [Validators.required]],
+        communicationSkills: ['0', [Validators.required]],
+        programmingSkills: ['0', [Validators.required]],
+        oopConcepts: ['0', [Validators.required]],
+        dataStructureConcepts: ['0', [Validators.required]],
+        algorithms: ['0', [Validators.required]],
+        designPattern: ['0', [Validators.required]],
+        programmingLanguageSkills: ['0', [Validators.required]],
+        analyticalSkills: ['0', [Validators.required]],
+        understandingOfdevLifeCycle: ['0', [Validators.required]],
+        teamPlayerCapability: ['0', [Validators.required]],
+        teamLeadCapability: ['0', [Validators.required]],
+        suitabilityForAppliedPost: ['0', [Validators.required]],
+      }),
+      finalScoring: this.formBuilder.group({
+        scoreObtained: [0, [Validators.required, Validators.pattern('^[0-9-]*$'), Validators.maxLength(50)]],
+        overallEvaluation: ['', [Validators.required]],
+      }),
+      interviewer: this.formBuilder.group({
+        name: ['Fahid Sami', [Validators.required, Validators.maxLength(50)]],
+        designation: ['Project Manager', [Validators.required, Validators.maxLength(50)]],
+        recommendation: ['0', [Validators.required]],
+        comments: ['Potential candidate', [Validators.required, Validators.maxLength(500)]],
+      }),
+      hiringAuthorityRemarks: this.formBuilder.group({
+        proposedDesignation: ['Software Engineer', [Validators.required, Validators.maxLength(50)]],
+        noticePeriod: [0, [Validators.required, Validators.minLength(1), Validators.maxLength(60)]],
+        currentSalary: [0, [Validators.required]],
+        expectedSalary: [0, [Validators.required]],
+        otherBenifits: ['Medical', [Validators.required, Validators.maxLength(500)]],
+        location: ['Lahore', [Validators.required, Validators.maxLength(50)]],
+        date: ['', [Validators.required, Validators.maxLength(50)]],
+        hiringAuthoritySignature: ['']
+      })
     });
-    this.hiringAuthoritySignature.disable();
 
     if (!this.imageUploaded) {
       this.imageInfo.USER_FILE_SRC = "assets/images/profile.jpg";
     }
     this.recruitmentService.selected_recruitment.subscribe(recruitment => {
-      //this.recruitmentForm = recruitment;
       if (!!Object.entries(recruitment).length) {
         this.isNewForm = false;
         const data: IRecruitmentForm = recruitment;
         this.candidateId = data._id;
-        console.log(data, this.candidateId);
-        this.candidateName.setValue(data.candidateInformation.name);
-        this.candidatePosition.setValue(data.candidateInformation.postAppliedFor);
-        this.relevantEducation.setValue(`${data.interviewerAssesment.education}`);
-        this.relevantJobPersistance.setValue(`${data.interviewerAssesment.jobPersistance}`);
-        this.relevantJobExperience.setValue(`${data.interviewerAssesment.jobExpreience}`);
-        this.appearance.setValue(`${data.personalAndTechnicalTraits.appearance}`);
-        this.communicationSkills.setValue(`${data.personalAndTechnicalTraits.communicationSkills}`);
-        this.basicProgrammingSkills.setValue(`${data.personalAndTechnicalTraits.programmingSkills}`);
-        this.objectOrientedConcepts.setValue(`${data.personalAndTechnicalTraits.oopConcepts}`);
-        this.dataStructureConcepts.setValue(`${data.personalAndTechnicalTraits.dataStructureConcepts}`);
-        this.algorithm.setValue(`${data.personalAndTechnicalTraits.algorithms}`);
-        this.designPattern.setValue(`${data.personalAndTechnicalTraits.designPattern}`);
-        this.programingLanguageSkills.setValue(`${data.personalAndTechnicalTraits.programmingLanguageSkills}`);
-        this.analyticalSkills.setValue(`${data.personalAndTechnicalTraits.analyticalSkills}`);
-        this.understandingOfDevLifeCycle.setValue(`${data.personalAndTechnicalTraits.understandingOfdevLifeCycle}`);
-        this.teamPlayerCapability.setValue(`${data.personalAndTechnicalTraits.teamPlayerCapability}`);
-        this.teamLeadCapability.setValue(`${data.personalAndTechnicalTraits.teamLeadCapability}`);
-        this.suitabilityForAppliedPost.setValue(`${data.personalAndTechnicalTraits.suitabilityForAppliedPost}`);
-        this.scoreObtained.setValue(data.personalAndTechnicalTraits.scoreObtained);
-        this.overallEvaluation.setValue(`${data.personalAndTechnicalTraits.overAllEvaluation}`);
-        this.interviewerName.setValue(data.interviewer.name);
-        this.interviewerDesignation.setValue(data.interviewer.designation);
-        this.recommendation.setValue(data.interviewer.recommendation);
-        this.interviewerComments.setValue(data.interviewer.comments);
-        this.proposedDesignation.setValue(data.hiringAuthorityRemarks.proposedDesignation);
-        this.salary.setValue(data.hiringAuthorityRemarks.salary);
-        this.otherBenefits.setValue(data.hiringAuthorityRemarks.otherBenifits);
-        this.location.setValue(data.hiringAuthorityRemarks.location);
-        this.date.setValue(data.hiringAuthorityRemarks.date.toString().split('T')[0]);
+        this.ciName.setValue(data.candidateInformation.name);
+        this.ciPostAppliedFor.setValue(data.candidateInformation.postAppliedFor);
+        this.ciPicture.setValue(data.candidateInformation.picture);
+        this.ciCv.setValue(data.candidateInformation.cv);
+        this.iaEducation.setValue(`${data.interviewerAssesment.education}`);
+        this.iaJobPersistance.setValue(`${data.interviewerAssesment.jobPersistance}`);
+        this.iaJobExpreience.setValue(`${data.interviewerAssesment.jobExpreience}`);
+        this.ptAppearance.setValue(`${data.personalAndTechnicalTraits.appearance}`);
+        this.ptCommunicationSkills.setValue(`${data.personalAndTechnicalTraits.communicationSkills}`);
+        this.ptProgrammingSkills.setValue(`${data.personalAndTechnicalTraits.programmingSkills}`);
+        this.ptOopConcepts.setValue(`${data.personalAndTechnicalTraits.oopConcepts}`);
+        this.ptDataStructureConcepts.setValue(`${data.personalAndTechnicalTraits.dataStructureConcepts}`);
+        this.ptAlgorithms.setValue(`${data.personalAndTechnicalTraits.algorithms}`);
+        this.ptDesignPattern.setValue(`${data.personalAndTechnicalTraits.designPattern}`);
+        this.ptProgrammingLanguageSkills.setValue(`${data.personalAndTechnicalTraits.programmingLanguageSkills}`);
+        this.ptAnalyticalSkills.setValue(`${data.personalAndTechnicalTraits.analyticalSkills}`);
+        this.ptUnderstandingOfdevLifeCycle.setValue(`${data.personalAndTechnicalTraits.understandingOfdevLifeCycle}`);
+        this.ptTeamPlayerCapability.setValue(`${data.personalAndTechnicalTraits.teamPlayerCapability}`);
+        this.ptTeamLeadCapability.setValue(`${data.personalAndTechnicalTraits.teamLeadCapability}`);
+        this.ptSuitabilityForAppliedPost.setValue(`${data.personalAndTechnicalTraits.suitabilityForAppliedPost}`);
+        this.fsScoreObtained.setValue(data.finalScoring.scoreObtained);
+        this.fsOverallEvaluation.setValue(`${data.finalScoring.overallEvaluation}`);
+        this.iName.setValue(data.interviewer.name);
+        this.iDesignation.setValue(data.interviewer.designation);
+        this.iRecommendation.setValue(data.interviewer.recommendation);
+        this.iComments.setValue(data.interviewer.comments);
+        this.harProposedDesignation.setValue(data.hiringAuthorityRemarks.proposedDesignation);
+        this.harNoticePeriod.setValue(data.hiringAuthorityRemarks.currentSalary);
+        this.harCurrentSalary.setValue(data.hiringAuthorityRemarks.expectedSalary);
+        this.harExpectedSalary.setValue(data.hiringAuthorityRemarks.noticePeriod);
+        this.harOtherBenifits.setValue(data.hiringAuthorityRemarks.otherBenifits);
+        this.harLocation.setValue(data.hiringAuthorityRemarks.location);
+        this.harDate.setValue(data.hiringAuthorityRemarks.date.toString().split('T')[0]);
+
+        console.log("editte form changed...sadfkljsadjfsdaf", this.isFormEdited);
+        this.recruitmentForm.valueChanges.subscribe((formValue) => {
+          this.isFormEdited = true;
+        })
       }
     });
+
+    this.calculateObtainedScore();
   }
 
-  onFormValuesChanged() {
-    for (const field in this.formErrors) {
-      if (!this.formErrors.hasOwnProperty(field)) {
-        continue;
-      }
+  calculateObtainedScore() {
+    const iaForm = this.recruitmentForm.controls.interviewerAssesment;
+    const ptForm = this.recruitmentForm.controls.personalAndTechnicalTraits;
+    const combinedForm: FormGroup = new FormGroup({ iaForm, ptForm });
+    combinedForm.valueChanges.subscribe(updatedForm => {
+      const mergedObject = Object.assign({}, updatedForm.iaForm, updatedForm.ptForm);
+      const finalScore = this.calculateScore(mergedObject);
+      this.fsScoreObtained.setValue(finalScore);
+      this.setOverallEvaluation(finalScore);
+    })
+  }
 
-      this.formErrors[field] = {};
-      const control = this.recruitmentForm.get(field);
+  private calculateScore(scoringForm: IScoringFields) {
+    return Object.values(scoringForm).reduce((prev, curr) => {
+      return parseInt(prev) + parseInt(curr);
+    })
+  }
 
-      if (control && control.dirty && !control.valid) {
-        this.formErrors[field] = control.errors;
-      }
+  private setOverallEvaluation(score: number) {
+    let category = '';
+    switch (true) {
+      case (score >= 17 && score <= 32):
+        category = 'fair';
+        break;
+      case (score >= 33 && score <= 48):
+        category = 'average';
+        break;
+      case (score >= 49 && score <= 64):
+        category = 'good';
+        break;
+      default:
+        category = ''
+        break;
     }
+    this.fsOverallEvaluation.setValue(category)
   }
+
+  // onFormValuesChanged() {
+  //   for (const field in this.formErrors) {
+  //     if (!this.formErrors.hasOwnProperty(field)) {
+  //       continue;
+  //     }
+
+  //     this.formErrors[field] = {};
+  //     const control = this.recruitmentForm.get(field);
+
+  //     if (control && control.dirty && !control.valid) {
+  //       this.formErrors[field] = control.errors;
+  //     }
+  //   }
+  // }
 
   async addRecruitment() {
     const values = this.recruitmentForm.value;
+    console.log(values);
     const candidateInformation: ICandidate = {
-      "name": values.candidateName,
-      "postAppliedFor": values.candidatePosition
+      "name": values.candidateInformation.name,
+      "postAppliedFor": values.candidateInformation.postAppliedFor,
+      "picture": values.candidateInformation.picture,
+      "cv": values.candidateInformation.cv
     }
     const interviewerAssesment: IInterviewerAssessment = {
-      "education": values.relevantEducation,
-      "jobPersistance": values.relevantJobPersistance,
-      "jobExpreience": values.relevantJobExperience
+      "education": values.interviewerAssesment.education,
+      "jobPersistance": values.interviewerAssesment.jobPersistance,
+      "jobExpreience": values.interviewerAssesment.jobExpreience
     }
     const personalAndTechnicalTraits: IPersonalAndTechnicalTraits = {
-      "appearance": values.appearance,
-      "communicationSkills": values.communicationSkills,
-      "programmingSkills": values.basicProgrammingSkills,
-      "oopConcepts": values.objectOrientedConcepts,
-      "dataStructureConcepts": values.dataStructureConcepts,
-      "algorithms": values.algorithm,
-      "designPattern": values.designPattern,
-      "programmingLanguageSkills": values.programingLanguageSkills,
-      "analyticalSkills": values.analyticalSkills,
-      "understandingOfdevLifeCycle": values.understandingOfDevLifeCycle,
-      "teamPlayerCapability": values.teamPlayerCapability,
-      "teamLeadCapability": values.teamLeadCapability,
-      "suitabilityForAppliedPost": values.suitabilityForAppliedPost,
-      "scoreObtained": values.scoreObtained,
-      "overAllEvaluation": values.overallEvaluation
+      "appearance": values.personalAndTechnicalTraits.appearance,
+      "communicationSkills": values.personalAndTechnicalTraits.communicationSkills,
+      "programmingSkills": values.personalAndTechnicalTraits.programmingSkills,
+      "oopConcepts": values.personalAndTechnicalTraits.oopConcepts,
+      "dataStructureConcepts": values.personalAndTechnicalTraits.dataStructureConcepts,
+      "algorithms": values.personalAndTechnicalTraits.algorithms,
+      "designPattern": values.personalAndTechnicalTraits.designPattern,
+      "programmingLanguageSkills": values.personalAndTechnicalTraits.programmingLanguageSkills,
+      "analyticalSkills": values.personalAndTechnicalTraits.analyticalSkills,
+      "understandingOfdevLifeCycle": values.personalAndTechnicalTraits.understandingOfdevLifeCycle,
+      "teamPlayerCapability": values.personalAndTechnicalTraits.teamPlayerCapability,
+      "teamLeadCapability": values.personalAndTechnicalTraits.teamLeadCapability,
+      "suitabilityForAppliedPost": values.personalAndTechnicalTraits.suitabilityForAppliedPost,
+    }
+    const finalScoring: IFinalScoring = {
+      "scoreObtained": values.finalScoring.scoreObtained,
+      "overallEvaluation": values.finalScoring.overallEvaluation
     }
     const interviewer: IInterviewer = {
-      "name": values.interviewerName,
-      "designation": values.interviewerDesignation,
-      "recommendation": values.recommendation,
-      "comments": values.interviewerComments
+      "name": values.interviewer.name,
+      "designation": values.interviewer.designation,
+      "recommendation": values.interviewer.recommendation,
+      "comments": values.interviewer.comments
     }
     const hiringAuthorityRemarks: IHiringAuthorityRemarks = {
-      "proposedDesignation": values.proposedDesignation,
-      "salary": values.salary,
-      "otherBenifits": values.otherBenefits,
-      "location": values.location,
-      "date": values.date
+      "proposedDesignation": values.hiringAuthorityRemarks.proposedDesignation,
+      "currentSalary": values.hiringAuthorityRemarks.noticePeriod,
+      "expectedSalary": values.hiringAuthorityRemarks.currentSalary,
+      "noticePeriod": values.hiringAuthorityRemarks.expectedSalary,
+      "otherBenifits": values.hiringAuthorityRemarks.otherBenifits,
+      "location": values.hiringAuthorityRemarks.location,
+      "date": values.hiringAuthorityRemarks.date
     }
     const payload: IRecruitmentForm = {
       candidateInformation,
       interviewerAssesment,
       personalAndTechnicalTraits,
+      finalScoring,
       interviewer,
       hiringAuthorityRemarks
     }
-    // console.log(payload);
     if (this.isNewForm) {
       await this.recruitmentService.addRecruitment(payload).subscribe(res => {
         console.log(res, this.isNewForm);
-        // this.recruitmentForm.reset();
-        this.snackBar.open('Recruitment Added Successfully!!', '', { duration: 3000 });
+        this.snackBar.open('Recruitment Added Successfully!!', '', { duration: 3000, panelClass: 'bg-success' });
       });
     } else {
       payload._id = this.candidateId;
       await this.recruitmentService.editRecruitment(payload).subscribe(res => {
         console.log(res, this.isNewForm);
-        this.snackBar.open('Recruitment Updated Successfully!!', '', { duration: 3000, panelClass: 'bg-success' });
+        this.snackBar.open('Recruitment Updated Successfully!!', '', { duration: 3000, panelClass: 'bg-info' });
       })
     }
-    this.router.navigateByUrl('recruitments');
+    this.recruitmentForm.reset();
+    this.router.navigate(['/recruitments']);
     this.recruitmentSaved = true;
   }
 
@@ -259,27 +298,38 @@ export class AddRecruitmentComponent implements OnInit {
   }
 
   uploadImage(event) {
-    if (event.target.files[0]) {
-      let name_length = event.target.files[0].name.length;
-      let file_size = event.target.files[0].size / 1000000;
+    console.log(event.target.files);
 
-      if (name_length <= 30 && file_size <= 50 && event.target.files[0].type.indexOf('image') !== -1) {
-        this.imageUploaded = true;
+    // const formData = new FormData();
+    // formData.append('file', event.target.files[0]);
 
-        this.imageInfo.USER_FILE_SRC = URL.createObjectURL(event.target.files[0]);
-        this.imageInfo.USER_FILE_TYPE = event.target.files[0].type;
-        this.imageInfo.USER_FILE_NAME = event.target.files[0].name;
-        this.imageInfo.USER_FILE_SIZE = file_size;
+    // console.log(formData);
 
-        //this.uploaded_images = Object.assign([], event.target.files);
-      }
-      else {
-        let message = "File must have a size of less then 50 MB & Name of file must be less then 30 characters";
-        this.snackBar.open(message, '', {
-          duration: 3000
-        });
-      }
-    }
+    this.recruitmentService.uploadCadidateImage(event.target.files).subscribe(res => {
+      console.log(res);
+    })
+
+    // if (event.target.files[0]) {
+    //   let name_length = event.target.files[0].name.length;
+    //   let file_size = event.target.files[0].size / 1000000;
+
+    //   if (name_length <= 30 && file_size <= 50 && event.target.files[0].type.indexOf('image') !== -1) {
+    //     this.imageUploaded = true;
+
+    //     this.imageInfo.USER_FILE_SRC = URL.createObjectURL(event.target.files[0]);
+    //     this.imageInfo.USER_FILE_TYPE = event.target.files[0].type;
+    //     this.imageInfo.USER_FILE_NAME = event.target.files[0].name;
+    //     this.imageInfo.USER_FILE_SIZE = file_size;
+
+    //     //this.uploaded_images = Object.assign([], event.target.files);
+    //   }
+    //   else {
+    //     let message = "File must have a size of less then 50 MB & Name of file must be less then 30 characters";
+    //     this.snackBar.open(message, '', {
+    //       duration: 3000
+    //     });
+    //   }
+    // }
   }
 
   uploadCadidateCv(cvFile) {
@@ -288,95 +338,107 @@ export class AddRecruitmentComponent implements OnInit {
     })
   }
 
-  get candidateName() {
-    return this.recruitmentForm.get("candidateName");
+  get ciName() {
+    return this.recruitmentForm.controls.candidateInformation.get("name");
   }
-  get candidatePosition() {
-    return this.recruitmentForm.get("candidatePosition");
+  get ciPostAppliedFor() {
+    return this.recruitmentForm.controls.candidateInformation.get("postAppliedFor");
   }
-  get relevantEducation() {
-    return this.recruitmentForm.get("relevantEducation");
+  get ciPicture() {
+    return this.recruitmentForm.controls.candidateInformation.get("Picture");
   }
-  get relevantJobPersistance() {
-    return this.recruitmentForm.get("relevantJobPersistance");
+  get ciCv() {
+    return this.recruitmentForm.controls.candidateInformation.get("cv");
   }
-  get relevantJobExperience() {
-    return this.recruitmentForm.get("relevantJobExperience");
+  get iaEducation() {
+    return this.recruitmentForm.controls.interviewerAssesment.get("education");
   }
-  get appearance() {
-    return this.recruitmentForm.get("appearance");
+  get iaJobPersistance() {
+    return this.recruitmentForm.controls.interviewerAssesment.get("jobPersistance");
   }
-  get communicationSkills() {
-    return this.recruitmentForm.get("communicationSkills");
+  get iaJobExpreience() {
+    return this.recruitmentForm.controls.interviewerAssesment.get("jobExpreience");
   }
-  get basicProgrammingSkills() {
-    return this.recruitmentForm.get("basicProgrammingSkills");
+  get ptAppearance() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("appearance");
   }
-  get objectOrientedConcepts() {
-    return this.recruitmentForm.get("objectOrientedConcepts");
+  get ptCommunicationSkills() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("communicationSkills");
   }
-  get dataStructureConcepts() {
-    return this.recruitmentForm.get("dataStructureConcepts");
+  get ptProgrammingSkills() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("programmingSkills");
   }
-  get algorithm() {
-    return this.recruitmentForm.get("algorithm");
+  get ptOopConcepts() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("oopConcepts");
   }
-  get designPattern() {
-    return this.recruitmentForm.get("designPattern");
+  get ptDataStructureConcepts() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("dataStructureConcepts");
   }
-  get programingLanguageSkills() {
-    return this.recruitmentForm.get("programingLanguageSkills");
+  get ptAlgorithms() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("algorithms");
   }
-  get analyticalSkills() {
-    return this.recruitmentForm.get("analyticalSkills");
+  get ptDesignPattern() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("designPattern");
   }
-  get understandingOfDevLifeCycle() {
-    return this.recruitmentForm.get("understandingOfDevLifeCycle");
+  get ptProgrammingLanguageSkills() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("programmingLanguageSkills");
   }
-  get teamPlayerCapability() {
-    return this.recruitmentForm.get("teamPlayerCapability");
+  get ptAnalyticalSkills() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("analyticalSkills");
   }
-  get teamLeadCapability() {
-    return this.recruitmentForm.get("teamLeadCapability");
+  get ptUnderstandingOfdevLifeCycle() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("understandingOfdevLifeCycle");
   }
-  get suitabilityForAppliedPost() {
-    return this.recruitmentForm.get("suitabilityForAppliedPost");
+  get ptTeamPlayerCapability() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("teamPlayerCapability");
   }
-  get scoreObtained() {
-    return this.recruitmentForm.get("scoreObtained");
+  get ptTeamLeadCapability() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("teamLeadCapability");
   }
-  get overallEvaluation() {
-    return this.recruitmentForm.get("overallEvaluation");
+  get ptSuitabilityForAppliedPost() {
+    return this.recruitmentForm.controls.personalAndTechnicalTraits.get("suitabilityForAppliedPost");
   }
-  get interviewerName() {
-    return this.recruitmentForm.get("interviewerName");
+  get fsScoreObtained() {
+    return this.recruitmentForm.controls.finalScoring.get("scoreObtained");
   }
-  get interviewerDesignation() {
-    return this.recruitmentForm.get("interviewerDesignation");
+  get fsOverallEvaluation() {
+    return this.recruitmentForm.controls.finalScoring.get("overallEvaluation");
   }
-  get recommendation() {
-    return this.recruitmentForm.get("recommendation");
+  get iName() {
+    return this.recruitmentForm.controls.interviewer.get("name");
   }
-  get interviewerComments() {
-    return this.recruitmentForm.get("interviewerComments");
+  get iDesignation() {
+    return this.recruitmentForm.controls.interviewer.get("designation");
   }
-  get proposedDesignation() {
-    return this.recruitmentForm.get("proposedDesignation");
+  get iRecommendation() {
+    return this.recruitmentForm.controls.interviewer.get("recommendation");
   }
-  get salary() {
-    return this.recruitmentForm.get("salary");
+  get iComments() {
+    return this.recruitmentForm.controls.interviewer.get("comments");
+  } interviewer
+  get harProposedDesignation() {
+    return this.recruitmentForm.controls.hiringAuthorityRemarks.get("proposedDesignation");
   }
-  get otherBenefits() {
-    return this.recruitmentForm.get("otherBenefits");
+  get harNoticePeriod() {
+    return this.recruitmentForm.controls.hiringAuthorityRemarks.get("noticePeriod");
   }
-  get location() {
-    return this.recruitmentForm.get("location");
+  get harCurrentSalary() {
+    return this.recruitmentForm.controls.hiringAuthorityRemarks.get("currentSalary");
   }
-  get date() {
-    return this.recruitmentForm.get("date");
+  get harExpectedSalary() {
+    return this.recruitmentForm.controls.hiringAuthorityRemarks.get("expectedSalary");
   }
-  get hiringAuthoritySignature() {
-    return this.recruitmentForm.get("hiringAuthoritySignature");
+  get harOtherBenifits() {
+    return this.recruitmentForm.controls.hiringAuthorityRemarks.get("otherBenifits");
+  }
+  get harLocation() {
+    return this.recruitmentForm.controls.hiringAuthorityRemarks.get("location");
+  }
+  get harDate() {
+    return this.recruitmentForm.controls.hiringAuthorityRemarks.get("date");
+  }
+  get harHiringAuthoritySignature() {
+    return this.recruitmentForm.controls.hiringAuthorityRemarks
   }
 
 }

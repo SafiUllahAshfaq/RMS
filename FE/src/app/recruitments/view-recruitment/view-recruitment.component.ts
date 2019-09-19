@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog, MatSnackBar } from '@angular/material';
-import { Router } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { RecruitmentsService } from "../../services/recruitments.service";
 import { IRecruitmentForm } from '../../models/interface';
@@ -15,26 +16,41 @@ export class ViewRecruitmentComponent implements OnInit {
   recruitments: [IRecruitmentForm];
   dataSource: any;
   displayedColumns: string[];
-  constructor(private router: Router, private recruitmentService: RecruitmentsService, private snackBar: MatSnackBar) { }
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
+  constructor(private router: Router, private recruitmentService: RecruitmentsService, private snackBar: MatSnackBar, private route: ActivatedRoute) {
+    this.route.params.subscribe((val) => {
+      //console.log('activatedRoute')
+      setTimeout(() => {
+        this.getAllRecruitments();
+      }, 0);
+    })
+  }
 
   ngOnInit() {
     this.getAllRecruitments();
-    this.displayedColumns = ['candidateName', 'candiateCv', 'interviewerName', 'interviewerDesignation', 'interviewDate', 'action'];
+    this.displayedColumns = ['candidateName', 'candidateCv', 'interviewerName', 'interviewerDesignation', 'interviewDate', 'action'];
   }
 
   getAllRecruitments() {
     this.recruitmentService.getAllRecruitments().subscribe(recruitmentRecords => {
       this.recruitments = recruitmentRecords;
       this.dataSource = new MatTableDataSource(this.recruitments);
+      this.dataSource.filterPredicate = (data, filter: string) => {
+        const accumulator = (currentTerm, key) => {
+          return key === 'candidateInformation' ? currentTerm + data.candidateInformation.name : currentTerm + data[key];
+        };
+        const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
+        // Transform the filter by converting it to lowercase and removing whitespace.
+        const transformedFilter = filter.trim().toLowerCase();
+        return dataStr.indexOf(transformedFilter) !== -1;
+      };
+      this.dataSource.paginator = this.paginator;
     });
   }
 
   downloadCv(recruitmentFormDetails) {
     console.log(recruitmentFormDetails);
-    // const payload = {
-    //   id: recruitmentFormDetails._id,
-    //   candidateName: recruitmentFormDetails.candidateInformation.name
-    // }
     const payload = {
       id: "5d8077090fd08d3e84b7e3ae",
       candidateName: "Safi Ullah"
@@ -42,14 +58,7 @@ export class ViewRecruitmentComponent implements OnInit {
     this.recruitmentService.getCandidateCv(payload);
   }
 
-  private downloadFile(data: Response) {
-    const blob = new Blob([data], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    window.open(url);
-  }
-
   applyFilter(filterValue: string) {
-    console.log(filterValue.trim().toLowerCase());
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
@@ -60,50 +69,9 @@ export class ViewRecruitmentComponent implements OnInit {
 
   deleteRecruitment(recruitment) {
     this.recruitmentService.deleteRecruitment(recruitment._id).subscribe(res => {
-      console.log(res);
       this.getAllRecruitments();
     }, error => {
-      console.log(error);
     })
-    //this.router.navigateByUrl('recruitments');
-    // this.departmentService.deleteDepartment(dep)
-    //   .subscribe(result => {
-    //     if (!result.error) {
-    //       if (result.affectedRows != 0) {
-
-    //         let id = dep.ORG_ID;
-    //         let index = this.departments.findIndex(function (obj) {
-    //           return obj.ORG_ID == id;
-    //         });
-
-    //         if (index !== -1) {
-    //           this.departments.splice(index, 1);
-    //         }
-
-    //         let message = 'Department deleted successfully';
-    //         this.snackBar.open(message, '', {
-    //           duration: 3000
-    //         });
-    //       }
-    //       else {
-    //         let message = 'Delete dependencies of this department first';
-    //         this.snackBar.open(message, '', {
-    //           duration: 3000
-    //         });
-    //       }
-    //     }
-    //     else {
-    //       let message = "Server Error. Try Again Later";
-    //       this.snackBar.open(message, '', {
-    //         duration: 3000
-    //       });
-    //     }
-    //   }, error => {
-    //     let message = "Server Error. Try Again Later";
-    //     this.snackBar.open(message, '', {
-    //       duration: 3000
-    //     });
-    // });
   }
 
 

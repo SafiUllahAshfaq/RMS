@@ -6,6 +6,7 @@ export interface IRecruitmentForm {
     candidateInformation: ICandidate,
     interviewerAssesment: IInterviewerAssessment,
     personalAndTechnicalTraits: IPersonalAndTechnicalTraits,
+    finalScoring: IFinalScoring,
     interviewer: IInterviewer,
     hiringAuthorityRemarks: IHiringAuthorityRemarks
 }
@@ -13,6 +14,8 @@ export interface IRecruitmentForm {
 export interface ICandidate {
     name: string;
     postAppliedFor: string;
+    picture?: string;
+    cv?: string;
 }
 
 export interface IInterviewerAssessment {
@@ -35,10 +38,11 @@ export interface IPersonalAndTechnicalTraits {
     teamPlayerCapability: EThreePointEstimate;
     teamLeadCapability: EThreePointEstimate;
     suitabilityForAppliedPost: EThreePointEstimate;
-    picture?: string;
-    cv?: string;
+}
+
+export interface IFinalScoring {
     scoreObtained?: number;
-    overAllEvaluation?: EOverAllEvaluation;
+    overallEvaluation?: EOverAllEvaluation;
 }
 
 export interface IInterviewer {
@@ -50,9 +54,12 @@ export interface IInterviewer {
 
 export interface IHiringAuthorityRemarks {
     proposedDesignation: string,
-    salary: number,
+    noticePeriod: number,
+    currentSalary: number,
+    expectedSalary: number,
     otherBenifits: string,
     location: string,
     date: Date
 }
 
+export interface IScoringFields extends IPersonalAndTechnicalTraits, IInterviewerAssessment { }

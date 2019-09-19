@@ -1,439 +1,477 @@
 <div id="forms" class="page-layout simple fullwidth" fxLayout="column">
-
-    <div class="content p-24">
+    <div class="content">
         <div fxLayout="column" fxLayoutAlign="start start" fxLayout.gt-md="row">
             <form class="mat-white-bg mat-elevation-z4 p-24 mb-24" enctype="multipart/form-data" fxLayout="column" fxLayoutAlign="start"
                 fxFlex="1 0 auto" name="form" [formGroup]="recruitmentForm" (ngSubmit)="addRecruitment()">
-
                 <div class="h2 mb-24">Add Recruitment Information</div>
 
-                <div class="bg-light border-bottom border-success my-4">
+                <div class="bg-light border-bottom border-primary my-4">
                     <span class="text-uppercase font-weight-500 p-12" fxFlex="90">Candidate Information</span>
                 </div>
+                <div formGroupName="candidateInformation">
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div fxLayout="row" class="row" fxLayoutAlign="start center" fxFlex="1 0 auto" class="row mb-4">
+                            <div class="col-6">
+                                <input hidden type="file" (change)="uploadFile($event)" formControlName="cv" accept="application/pdf" #fileInput />
+                                <button mat-raised-button class="upload-button mat-basic" type="button" (click)="fileInput.click()">
+                                    Upload CV
+                                </button>
+                                <div class="upload-info" *ngIf="resumeInfo.file_name">{{ resumeInfo.file_name }} ({{ resumeInfo.file_size }})</div>
+                            </div>
+                            <div class="col-6">
+                                <input hidden type="file" (change)="uploadImage($event)" formControlName="picture" accept="image/*" #imageInput />
+                                <img class="img-size" (click)="imageInput.click()" [src]="imageInfo.USER_FILE_SRC | safeUrl">
+                            </div>
+                        </div>
+                        <mat-form-field class="w-50 col">
+                            <input matInput placeholder="Name" formControlName="name" required>
+                            <mat-error *ngIf="ciName.errors ? ciName.errors.required : false">
+                                Candidate Name is required!
+                            </mat-error>
+                            <!-- <mat-error *ngIf="ciName.errors ? ciName.errors.pattern : false">
+                                Only alphabets are allowed!
+                            </mat-error> -->
+                            <mat-error *ngIf="ciName.errors ? ciName.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
 
-
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <mat-form-field class="w-50 col">
-                        <input matInput placeholder="Name" formControlName="candidateName" required>
-                        <mat-error *ngIf="formErrors.candidateName.required">
-                            Candidate Name is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.candidateName.maxlength">
-                            Only 50 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field class="w-50 ">
-                        <input matInput placeholder="Position" formControlName="candidatePosition" required>
-                        <mat-error *ngIf="formErrors.candidatePosition.required">
-                            Candidate Position is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.candidatePosition.maxlength">
-                            Only 50 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
+                        <mat-form-field class="w-50 ">
+                            <input matInput placeholder="Position" formControlName="postAppliedFor" required>
+                            <mat-error *ngIf="ciPostAppliedFor.errors ? ciPostAppliedFor.errors.required : false">
+                                Candidate Position is required!
+                            </mat-error>
+                            <!-- <mat-error *ngIf="ciName.errors ? ciPostAppliedFor.errors.pattern : false">
+                                Only alphabets are allowed!
+                            </mat-error> -->
+                            <mat-error *ngIf="ciPostAppliedFor.errors ? ciPostAppliedFor.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
                 </div>
-                <div class="bg-light border-bottom border-success my-4">
+
+                <div class="bg-light border-bottom border-primary my-4">
                     <span class="text-uppercase font-weight-500 p-12" fxFlex="90">Interview Assessment</span>
                 </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Relevant Education</label>
-                        <mat-radio-group formControlName="relevantEducation">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.relevantEducation.required">
-                            Relevant Education is required!
-                        </mat-error>
+                <div formGroupName="interviewerAssesment">
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Relevant Education</label>
+                            <mat-radio-group formControlName="education">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="iaEducation.errors ? iaEducation.errors.required : false">
+                                Relevant Education is required!
+                            </mat-error>
+                        </div>
                     </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Relevant Job Persistance</label>
-                        <mat-radio-group formControlName="relevantJobPersistance">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.relevantJobPersistance.required">
-                            Relevant Job Persistance is required!
-                        </mat-error>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Relevant Job Persistance</label>
+                            <mat-radio-group formControlName="jobPersistance">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="iaJobPersistance.errors ? iaJobPersistance.errors.required : false">
+                                Relevant Job Persistance is required!
+                            </mat-error>
+                        </div>
                     </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Relevant Job Experience</label>
-                        <mat-radio-group formControlName="relevantJobExperience">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.relevantJobExperience.required">
-                            Relevant Job Experience is required!
-                        </mat-error>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Relevant Job Experience</label>
+                            <mat-radio-group formControlName="jobExpreience">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="iaJobExpreience.errors ? iaJobExpreience.errors.required : false">
+                                Relevant Job Experience is required!
+                            </mat-error>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-light border-bottom border-success my-4">
+                <div class="bg-light border-bottom border-primary my-4">
                     <span class="text-uppercase font-weight-500 p-12" fxFlex="90">Personal and Technical traits</span>
                 </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Appearance</label>
-                        <mat-radio-group formControlName="appearance">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.appearance.required">
-                            Appearance is required!
-                        </mat-error>
+                <div formGroupName="personalAndTechnicalTraits">
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Appearance</label>
+                            <mat-radio-group formControlName="appearance">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptAppearance.errors ? ptAppearance.errors.required : false">
+                                Appearance is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Communication Skills</label>
+                            <mat-radio-group formControlName="communicationSkills">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptCommunicationSkills.errors ? ptCommunicationSkills.errors.required : false">
+                                Communication Skills is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Basic Programming Skills</label>
+                            <mat-radio-group formControlName="programmingSkills">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptProgrammingSkills.errors ? ptProgrammingSkills.errors.required : false">
+                                Basic Programming Skills is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Object Oriented Concepts</label>
+                            <mat-radio-group formControlName="oopConcepts">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptOopConcepts.errors ? ptOopConcepts.errors.required : false">
+                                Object Oriented Concepts is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Data Structure Concepts</label>
+                            <mat-radio-group formControlName="dataStructureConcepts">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptDataStructureConcepts.errors ? ptDataStructureConcepts.errors.required : false">
+                                Data Structure Concepts is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Algorithm</label>
+                            <mat-radio-group formControlName="algorithms">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptAlgorithms.errors ? ptAlgorithms.errors.required : false">
+                                Algorithm is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Design Pattern</label>
+                            <mat-radio-group formControlName="designPattern">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptDesignPattern.errors ? ptDesignPattern.errors.required : false">
+                                Design Pattern is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Programing Language Skills</label>
+                            <mat-radio-group formControlName="programmingLanguageSkills">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptProgrammingLanguageSkills.errors ? ptProgrammingLanguageSkills.errors.required : false">
+                                Programing Language Skills is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Analytical Skills</label>
+                            <mat-radio-group formControlName="analyticalSkills">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptAnalyticalSkills.errors ? ptAnalyticalSkills.errors.required : false">
+                                Analytical Skills is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Understanding of Dev Lifecycle</label>
+                            <mat-radio-group formControlName="understandingOfdevLifeCycle">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptUnderstandingOfdevLifeCycle.errors ? ptUnderstandingOfdevLifeCycle.errors.required : false">
+                                Understanding of Dev Lifecycle is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Team Player Capability </label>
+                            <mat-radio-group formControlName="teamPlayerCapability">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptTeamPlayerCapability.errors ? ptTeamPlayerCapability.errors.required : false">
+                                Team Player Capability is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Team Lead Capability </label>
+                            <mat-radio-group formControlName="teamLeadCapability">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptTeamLeadCapability.errors ? ptTeamLeadCapability.errors.required : false">
+                                Team Lead Capability is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Suitability for Position Applied </label>
+                            <mat-radio-group formControlName="suitabilityForAppliedPost">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="ptSuitabilityForAppliedPost.errors ? ptSuitabilityForAppliedPost.errors.required : false">
+                                Suitability for Position Applied is required!
+                            </mat-error>
+                        </div>
                     </div>
                 </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Communication Skills</label>
-                        <mat-radio-group formControlName="communicationSkills">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.communicationSkills.required">
-                            Communication Skills is required!
-                        </mat-error>
+                <div formGroupName="finalScoring">
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <mat-form-field class="w-100 col" (mouseout)="disabled=true">
+                            <input matInput placeholder="Score Obtained" [attr.disabled]="disabled?'':null" class="text-dark font-weight-bold" type="number"
+                                formControlName="scoreObtained">
+                            <mat-error *ngIf="fsScoreObtained.errors ? fsScoreObtained.errors.required : false">
+                                Score Obtained is required!
+                            </mat-error>
+                            <mat-error *ngIf="fsScoreObtained.errors ? fsScoreObtained.errors.pattern : false">
+                                Only numerals are allowed!
+                            </mat-error>
+                            <mat-error *ngIf="fsScoreObtained.errors ? fsScoreObtained.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Overall Evaluation </label>
+                            <mat-radio-group formControlName="overallEvaluation" disabled>
+                                <mat-radio-button class="label-margin col-2" class="text-primary" value="fair">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="average">Average</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="good">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <!-- <mat-error *ngIf="fsOverAllEvaluation.errors ? fsOverAllEvaluation.errors.required : false">
+                                Overall Evaluation is required!
+                            </mat-error> -->
+                        </div>
                     </div>
                 </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Basic Programming Skills</label>
-                        <mat-radio-group formControlName="basicProgrammingSkills">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.basicProgrammingSkills.required">
-                            Basic Programming Skills is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Object Oriented Concepts</label>
-                        <mat-radio-group formControlName="objectOrientedConcepts">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.objectOrientedConcepts.required">
-                            Object Oriented Concepts is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Data Structure Concepts</label>
-                        <mat-radio-group formControlName="dataStructureConcepts">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.dataStructureConcepts.required">
-                            Data Structure Concepts is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Algorithm</label>
-                        <mat-radio-group formControlName="algorithm">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.algorithm.required">
-                            Algorithm is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Design Pattern</label>
-                        <mat-radio-group formControlName="designPattern">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.designPattern.required">
-                            Design Pattern is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Programing Language Skills</label>
-                        <mat-radio-group formControlName="programingLanguageSkills">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.programingLanguageSkills.required">
-                            Programing Language Skills is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Analytical Skills</label>
-                        <mat-radio-group formControlName="analyticalSkills">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.analyticalSkills.required">
-                            Analytical Skills is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Understanding of Dev Lifecycle</label>
-                        <mat-radio-group formControlName="understandingOfDevLifeCycle">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.understandingOfDevLifeCycle.required">
-                            Understanding of Dev Lifecycle is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Team Player Capability </label>
-                        <mat-radio-group formControlName="teamPlayerCapability">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.teamPlayerCapability.required">
-                            Team Player Capability is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Team Lead Capability </label>
-                        <mat-radio-group formControlName="teamLeadCapability">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.teamLeadCapability.required">
-                            Team Lead Capability is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Suitability for Position Applied </label>
-                        <mat-radio-group formControlName="suitabilityForAppliedPost">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.suitabilityForAppliedPost.required">
-                            Suitability for Position Applied is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <mat-form-field class="w-100 col">
-                        <input matInput placeholder="Score Obtained" type="number" formControlName="scoreObtained">
-                        <mat-error *ngIf="formErrors.scoreObtained.required">
-                            Score Obtained is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.scoreObtained.pattern">
-                            Only numerals are allowed!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.scoreObtained.maxlength">
-                            Only 50 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Overall Evaluation </label>
-                        <mat-radio-group formControlName="overallEvaluation">
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Average</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.overallEvaluation.required">
-                            Overall Evaluation is required!
-                        </mat-error>
-                    </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <mat-form-field class="w-100 col">
-                        <textarea matInput placeholder="Interviewer Comments" formControlName="interviewerComments" required></textarea>
-                        <mat-error *ngIf="formErrors.interviewerComments.required">
-                            Interviewer Comments is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.interviewerComments.maxlength">
-                            Only 500 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="bg-light border-bottom border-success my-4">
+                <div class="bg-light border-bottom border-primary my-4">
                     <span class="text-uppercase font-weight-500 p-12" fxFlex="90">Interviewer</span>
                 </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <mat-form-field class="w-50 col">
-                        <input matInput placeholder="Name" formControlName="interviewerName" required>
-                        <mat-error *ngIf="formErrors.interviewerName.required">
-                            Interviewer Name is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.interviewerName.maxlength">
-                            Only 50 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field class="w-50 col">
-                        <input matInput placeholder="Designation" formControlName="interviewerDesignation" required>
-                        <mat-error *ngIf="formErrors.interviewerDesignation.required">
-                            interviewer Designation is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.interviewerDesignation.maxlength">
-                            Only 50 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <div class="w-100">
-                        <label class="label-margin col-3">Recommendation</label>
-                        <mat-radio-group formControlName="recommendation">
-                            <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
-                            <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-error *ngIf="formErrors.recommendation.required">
-                            Recommendation is required!
-                        </mat-error>
+                <div formGroupName="interviewer">
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <mat-form-field class="w-50 col">
+                            <input matInput placeholder="Name" formControlName="name" required>
+                            <mat-error *ngIf="iName.errors ? iName.errors.required : false">
+                                Interviewer Name is required!
+                            </mat-error>
+                            <!-- <mat-error *ngIf="iName.errors ? iName.pattern.required : false">
+                                Only alphabets are allowed!
+                            </mat-error> -->
+                            <mat-error *ngIf="iName.errors ? iName.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-50 col">
+                            <input matInput placeholder="Designation" formControlName="designation" required>
+                            <mat-error *ngIf="iDesignation.errors ? iDesignation.errors.required : false">
+                                interviewer Designation is required!
+                            </mat-error>
+                            <!-- <mat-error *ngIf="iDesignation.errors ? iDesignation.pattern.required : false">
+                                Only alphabets are allowed!
+                            </mat-error> -->
+                            <mat-error *ngIf="iDesignation.errors ? iDesignation.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <div class="w-100">
+                            <label class="label-margin col-3">Recommendation</label>
+                            <mat-radio-group formControlName="recommendation">
+                                <mat-radio-button class="label-margin col-2" value="0">Not Applicable</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="1">Fair</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="3">Satisfactory</mat-radio-button>
+                                <mat-radio-button class="label-margin col-2" value="4">Good</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="iRecommendation.errors ? iRecommendation.errors.required : false">
+                                Recommendation is required!
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <mat-form-field class="w-100 col">
+                            <textarea matInput placeholder="Interviewer Comments" formControlName="comments" required></textarea>
+                            <mat-error *ngIf="iComments.errors ? iComments.errors.required : false">
+                                Interviewer Comments is required!
+                            </mat-error>
+                            <mat-error *ngIf="iComments.errors ? iComments.errors.maxlength : false">
+                                Only 500 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
                     </div>
                 </div>
 
-                <div class="bg-light border-bottom border-success my-4">
+                <div class="bg-light border-bottom border-primary my-4">
                     <span class="text-uppercase font-weight-500 p-12" fxFlex="90">Hiring Authority Remarks</span>
                 </div>
-                <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <mat-form-field class="w-50">
-                        <input matInput placeholder="Proposed Designation" formControlName="proposedDesignation" required>
-                        <mat-error *ngIf="formErrors.proposedDesignation.required">
-                            Proposed Designation is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.proposedDesignation.maxlength">
-                            Only 50 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
+                <div formGroupName="hiringAuthorityRemarks">
+                    <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <mat-form-field class="w-50 col">
+                            <input matInput placeholder="Proposed Designation" formControlName="proposedDesignation" required>
+                            <mat-error *ngIf="harProposedDesignation.errors ? harProposedDesignation.errors.required : false">
+                                Proposed Designation is required!
+                            </mat-error>
+                            <!-- <mat-error *ngIf="harProposedDesignation.errors ? harProposedDesignation.pattern.required : false">
+                                Only alphabets are allowed!
+                            </mat-error> -->
+                            <!-- <mat-error *ngIf="harProposedDesignation.errors ? harProposedDesignation.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error> -->
+                        </mat-form-field>
 
-                    <mat-form-field class="w-50 ">
-                        <input matInput placeholder="Salary" formControlName="salary" required>
-                        <mat-error *ngIf="formErrors.salary.required">
-                            Salary is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.salary.pattern">
-                            Only numerals are allowed!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.salary.maxlength">
-                            Only 50 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <mat-form-field class="w-50">
-                        <input matInput placeholder="Location" formControlName="location" required>
-                        <mat-error *ngIf="formErrors.location.required">
-                            Salary is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.location.maxlength">
-                            Only 50 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field class="w-50 ">
-                        <textarea matInput placeholder="Other Benefits" formControlName="otherBenefits" required></textarea>
-                        <mat-error *ngIf="formErrors.otherBenefits.required">
-                            Other Benefits is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.otherBenefits.maxlength">
-                            Only 50 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                    <mat-form-field class="w-50">
-                        <input matInput placeholder="Date" type="date" formControlName="date" required>
-                        <mat-error *ngIf="formErrors.date.required">
-                            Date is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.date.maxlength">
-                            Only 50 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field class="w-50 ">
-                        <textarea matInput placeholder="Hiring Authority Signature" formControlName="hiringAuthoritySignature" required></textarea>
-                        <mat-error *ngIf="formErrors.hiringAuthoritySignature.required">
-                            Hiring Authority Signature is required!
-                        </mat-error>
-                        <mat-error *ngIf="formErrors.hiringAuthoritySignature.maxlength">
-                            Only 50 characters are allowed!
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-
-
-                <div class="pt-24 btn-align" fxLayout="row" fxLayoutAlign="flex-end">
-                    <button class="mr-8" mat-raised-button type="button" color="primary" [routerLink]="['/recruitments']">
-                        Cancel
-                    </button>
-                    <button mat-raised-button type="submit" color="accent">
-                        Save
-                    </button>
-                </div>
-
-                <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto" *ngIf="recruitmentSaved">
-                    <div class="w-50">
-                        <input hidden type="file" (change)="uploadFile($event)" accept="application/pdf" #fileInput/>
-                        <button mat-raised-button class="upload-button mat-basic" type="button" (click)="fileInput.click()">
-                            Upload File
+                        <mat-form-field class="w-50 col">
+                            <input matInput placeholder="NoticePeriod" type="number" min="1" max="60" formControlName="noticePeriod" required>
+                            <mat-error *ngIf="harNoticePeriod.errors ? harNoticePeriod.errors.required : false">
+                                Notice Period is required!
+                            </mat-error>
+                            <mat-error *ngIf="harNoticePeriod.errors ? harNoticePeriod.errors.maxlength : false">
+                                Notice period can not be more than 60 days.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <mat-form-field class="w-50 col">
+                            <input matInput placeholder="Current Salary" type="number" min="0" formControlName="currentSalary" required>
+                            <mat-error *ngIf="harCurrentSalary.errors ? harCurrentSalary.errors.required : false">
+                                Current Salary is required!
+                            </mat-error>
+                            <mat-error *ngIf="harCurrentSalary.errors ? harCurrentSalary.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-50 col">
+                            <input matInput placeholder="Expected Salary" type="number" min="0" formControlName="expectedSalary" required>
+                            <mat-error *ngIf="harExpectedSalary.errors ? harExpectedSalary.errors.required : false">
+                                Expected Salary is required!
+                            </mat-error>
+                            <mat-error *ngIf="harExpectedSalary.errors ? harExpectedSalary.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <mat-form-field class="w-50 col">
+                            <input matInput placeholder="Location" formControlName="otherBenifits" required>
+                            <mat-error *ngIf="harOtherBenifits.errors ? harOtherBenifits.errors.required : false">
+                                Salary is required!
+                            </mat-error>
+                            <mat-error *ngIf="harOtherBenifits.errors ? harOtherBenifits.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-50 col">
+                            <textarea matInput placeholder="Other Benefits" rows="2" formControlName="location" required></textarea>
+                            <mat-error *ngIf="harLocation.errors ? harLocation.errors.required : false">
+                                Other Benefits is required!
+                            </mat-error>
+                            <mat-error *ngIf="harLocation.errors ? harLocation.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                        <mat-form-field class="w-50 col">
+                            <input matInput [min]="minDate" [matDatepicker]="picker" formControlName="date" placeholder="Choose a date" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                            <mat-error *ngIf="harDate.errors ? harDate.errors.required : false">
+                                Date is required!
+                            </mat-error>
+                            <mat-error *ngIf="harDate.errors ? harDate.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-50 col py-2" (mouseout)="disabled=true">
+                            <input matInput placeholder="Hiring Authority Signature" [attr.disabled]="disabled?'':null" formControlName="hiringAuthoritySignature">
+                            <mat-error *ngIf="harHiringAuthoritySignature.errors ? harHiringAuthoritySignature.errors.required : false">
+                                Hiring Authority Signature is required!
+                            </mat-error>
+                            <mat-error *ngIf="harHiringAuthoritySignature.errors ? harHiringAuthoritySignature.errors.maxlength : false">
+                                Only 50 characters are allowed!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="pt-24 btn-align" fxLayout="row" fxLayoutAlign="flex-end">
+                        <button class="mr-8 btn-black" mat-raised-button type="button" [routerLink]="['/recruitments']">
+                            Cancel
                         </button>
-                        <div class="upload-info" *ngIf="resumeInfo.file_name">{{ resumeInfo.file_name }} ({{ resumeInfo.file_size }})</div>
-                    </div>
-                    <div class="w-50">
-                        <input hidden type="file" (change)="uploadImage($event)" accept="image/*" #imageInput/>
-                        <img class="img-size" (click)="imageInput.click()" [src]="imageInfo.USER_FILE_SRC | safeUrl">
+                        <button mat-raised-button class="btn-primary" type="submit" color="primary" [disabled]="!this.recruitmentForm.valid">
+                            Save
+                        </button>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
