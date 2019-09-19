@@ -15,8 +15,7 @@
                                 <input hidden type="file" (change)="uploadFile($event)" formControlName="cv" accept="application/pdf" #fileInput />
                                 <button mat-raised-button class="upload-button mat-basic" type="button" (click)="fileInput.click()">
                                     Upload CV
-                                </button>
-                                <div class="upload-info" *ngIf="resumeInfo.file_name">{{ resumeInfo.file_name }} ({{ resumeInfo.file_size }})</div>
+                                    <div class="upload-info" *ngIf="resumeInfo.file_name">{{ resumeInfo.file_name }} ({{ resumeInfo.file_size }})</div>
                             </div>
                             <div class="col-6">
                                 <input hidden type="file" (change)="uploadImage($event)" formControlName="picture" accept="image/*" #imageInput />
@@ -27,15 +26,14 @@
                             <input matInput placeholder="Name" formControlName="name" required>
                             <mat-error *ngIf="ciName.errors ? ciName.errors.required : false">
                                 Candidate Name is required!
-                            </mat-error>
-                            <!-- <mat-error *ngIf="ciName.errors ? ciName.errors.pattern : false">
+                                <!-- <mat-error *ngIf="ciName.errors ? ciName.errors.pattern : false">
                                 Only alphabets are allowed!
                             </mat-error> -->
-                            <mat-error *ngIf="ciName.errors ? ciName.errors.maxlength : false">
-                                Only 50 characters are allowed!
-                            </mat-error>
+                                ======= >>>>>>> 58c704a9264d49c6295f82527bb90ebdc676fb2a
+                                <mat-error *ngIf="ciName.errors ? ciName.errors.maxlength : false">
+                                    Only 50 characters are allowed!
+                                </mat-error>
                         </mat-form-field>
-
                         <mat-form-field class="w-50 ">
                             <input matInput placeholder="Position" formControlName="postAppliedFor" required>
                             <mat-error *ngIf="ciPostAppliedFor.errors ? ciPostAppliedFor.errors.required : false">
@@ -412,67 +410,131 @@
                             </mat-error>
                         </mat-form-field>
                         <mat-form-field class="w-50 col">
-                            <input matInput placeholder="Expected Salary" type="number" min="0" formControlName="expectedSalary" required>
-                            <mat-error *ngIf="harExpectedSalary.errors ? harExpectedSalary.errors.required : false">
-                                Expected Salary is required!
-                            </mat-error>
-                            <mat-error *ngIf="harExpectedSalary.errors ? harExpectedSalary.errors.maxlength : false">
-                                Only 50 characters are allowed!
-                            </mat-error>
+                            <<<<<<< HEAD <input matInput placeholder="Expected Salary" type="number" min="0" formControlName="expectedSalary" required>
+                                =======
+                                <input matInput placeholder="Expected Salary" type="number" min="0" formControlName="expectedSalary" required>
+                                <mat-error *ngIf="harExpectedSalary.errors ? harExpectedSalary.errors.required : false">
+                                </mat-error>
                         </mat-form-field>
-                    </div>
-                    <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                        <mat-form-field class="w-50 col">
-                            <input matInput placeholder="Location" formControlName="otherBenifits" required>
-                            <mat-error *ngIf="harOtherBenifits.errors ? harOtherBenifits.errors.required : false">
-                                Salary is required!
-                            </mat-error>
-                            <mat-error *ngIf="harOtherBenifits.errors ? harOtherBenifits.errors.maxlength : false">
-                                Only 50 characters are allowed!
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field class="w-50 col">
-                            <textarea matInput placeholder="Other Benefits" rows="2" formControlName="location" required></textarea>
-                            <mat-error *ngIf="harLocation.errors ? harLocation.errors.required : false">
-                                Other Benefits is required!
-                            </mat-error>
-                            <mat-error *ngIf="harLocation.errors ? harLocation.errors.maxlength : false">
-                                Only 50 characters are allowed!
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
-                        <mat-form-field class="w-50 col">
-                            <input matInput [min]="minDate" [matDatepicker]="picker" formControlName="date" placeholder="Choose a date" required>
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                            <mat-error *ngIf="harDate.errors ? harDate.errors.required : false">
-                                Date is required!
-                            </mat-error>
-                            <mat-error *ngIf="harDate.errors ? harDate.errors.maxlength : false">
-                                Only 50 characters are allowed!
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field class="w-50 col py-2" (mouseout)="disabled=true">
-                            <input matInput placeholder="Hiring Authority Signature" [attr.disabled]="disabled?'':null" formControlName="hiringAuthoritySignature">
+                        <<<<<<< HEAD </div>
+                            <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                                <mat-form-field class="w-50 col">
+                                    <input matInput placeholder="Location" formControlName="otherBenifits" required>
+                                    <mat-error *ngIf="harOtherBenifits.errors ? harOtherBenifits.errors.required : false">
+                                        Salary is required!
+                                    </mat-error>
+                                    <mat-error *ngIf="harOtherBenifits.errors ? harOtherBenifits.errors.maxlength : false">
+                                        Only 50 characters are allowed!
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="w-50 col">
+                                    <textarea matInput placeholder="Other Benefits" rows="2" formControlName="location" required></textarea>
+                                    <mat-error *ngIf="harLocation.errors ? harLocation.errors.required : false">
+                                        Other Benefits is required!
+                                    </mat-error>
+                                    <mat-error *ngIf="harLocation.errors ? harLocation.errors.maxlength : false">
+                                        Only 50 characters are allowed!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                                <mat-form-field class="w-50 col">
+                                    <input matInput [min]="minDate" [matDatepicker]="picker" formControlName="date" placeholder="Choose a date" required>
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                    <mat-error *ngIf="harDate.errors ? harDate.errors.required : false">
+                                        Date is required!
+                                    </mat-error>
+                                    <mat-error *ngIf="harDate.errors ? harDate.errors.maxlength : false">
+                                        Only 50 characters are allowed!
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="w-50 col py-2" (mouseout)="disabled=true">
+                                    <input matInput placeholder="Hiring Authority Signature" [attr.disabled]="disabled?'':null" formControlName="hiringAuthoritySignature">
+                                    <mat-error *ngIf="harHiringAuthoritySignature.errors ? harHiringAuthoritySignature.errors.required : false">
+                                        Hiring Authority Signature is required!
+                                    </mat-error>
+                                    <mat-error *ngIf="harHiringAuthoritySignature.errors ? harHiringAuthoritySignature.errors.maxlength : false">
+                                        Only 50 characters are allowed!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="pt-24 btn-align" fxLayout="row" fxLayoutAlign="flex-end">
+                                <button class="mr-8 btn-black" mat-raised-button type="button" [routerLink]="['/recruitments']">
+                                    Cancel
+                                </button>
+                                <button mat-raised-button class="btn-primary" type="submit" color="primary" [disabled]="!this.recruitmentForm.valid">
+                                    Save
+                                </button>
+                                =======
+                            </div>
+                            <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                                <mat-form-field class="w-50 col">
+                                    <input matInput placeholder="Location" formControlName="otherBenifits" required>
+                                    <mat-error *ngIf="harOtherBenifits.errors ? harOtherBenifits.errors.required : false">
+                                        Salary is required!
+                                    </mat-error>
+                                    <mat-error *ngIf="harOtherBenifits.errors ? harOtherBenifits.errors.maxlength : false">
+                                        Only 50 characters are allowed!
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="w-50 col">
+                                    <textarea matInput placeholder="Other Benefits" rows="2" formControlName="location" required></textarea>
+                                    <mat-error *ngIf="harLocation.errors ? harLocation.errors.required : false">
+                                        Other Benefits is required!
+                                    </mat-error>
+                                    <mat-error *ngIf="harLocation.errors ? harLocation.errors.maxlength : false">
+                                        Only 50 characters are allowed!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto">
+                                <mat-form-field class="w-50 col">
+                                    <input matInput [min]="minDate" [matDatepicker]="picker" formControlName="date" placeholder="Choose a date" required>
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                    <mat-error *ngIf="harDate.errors ? harDate.errors.required : false">
+                                        Date is required!
+                                    </mat-error>
+                                    <mat-error *ngIf="harDate.errors ? harDate.errors.maxlength : false">
+                                        Only 50 characters are allowed!
+                                    </mat-error>
+                                </mat-form-field>
+                                <!-- <mat-form-field class="w-50 col">
+                            <textarea matInput placeholder="Hiring Authority Signature"
+                                formControlName="hiringAuthoritySignature" required></textarea>
                             <mat-error *ngIf="harHiringAuthoritySignature.errors ? harHiringAuthoritySignature.errors.required : false">
                                 Hiring Authority Signature is required!
                             </mat-error>
                             <mat-error *ngIf="harHiringAuthoritySignature.errors ? harHiringAuthoritySignature.errors.maxlength : false">
                                 Only 50 characters are allowed!
                             </mat-error>
-                        </mat-form-field>
+                        </mat-form-field> -->
+                            </div>
+                            <div class="pt-24 btn-align" fxLayout="row" fxLayoutAlign="flex-end">
+                                <button class="mr-8 btn-black" mat-raised-button type="button" [routerLink]="['/recruitments']">
+                                    Cancel
+                                </button>
+                                <button mat-raised-button class="btn-primary" type="submit" color="primary" [disabled]="!this.recruitmentForm.valid">
+                                    Save
+                                </button>
+                            </div>
+                            <div fxLayout="row" class="col" fxLayoutAlign="start center" fxFlex="1 0 auto" *ngIf="recruitmentSaved">
+                                <div class="col-6">
+                                    <input hidden type="file" (change)="uploadFile($event)" accept="application/pdf" #fileInput />
+                                    <button mat-raised-button class="upload-button mat-basic" type="button" (click)="fileInput.click()">
+                                        Upload CV
+                                    </button>
+                                    <div class="upload-info" *ngIf="resumeInfo.file_name">{{ resumeInfo.file_name }} ({{ resumeInfo.file_size }})</div>
+                                </div>
+                                <div class="col-6">
+                                    <input hidden type="file" (change)="uploadImage($event)" accept="image/*" #imageInput />
+                                    <img class="img-size" (click)="imageInput.click()" [src]="imageInfo.USER_FILE_SRC | safeUrl">
+                                </div>
+                                >>>>>>> 58c704a9264d49c6295f82527bb90ebdc676fb2a
+                            </div>
                     </div>
-                    <div class="pt-24 btn-align" fxLayout="row" fxLayoutAlign="flex-end">
-                        <button class="mr-8 btn-black" mat-raised-button type="button" [routerLink]="['/recruitments']">
-                            Cancel
-                        </button>
-                        <button mat-raised-button class="btn-primary" type="submit" color="primary" [disabled]="!this.recruitmentForm.valid">
-                            Save
-                        </button>
-                    </div>
-                </div>
             </form>
+            </div>
         </div>
     </div>
-</div>

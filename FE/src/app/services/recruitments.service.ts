@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { IRecruitmentForm } from '../models/interface';
 
-import { saveAs } from 'file-saver';
+import { saveAs } from 'file-saver';a
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,7 @@ export class RecruitmentsService {
   constructor(private http: HttpClient) {
   }
 
-  rest_api = 'http://localhost:500/candidate/';
-  // rest_api = 'http://192.168.20.11:500/candidate/';
+  rest_api = 'http://192.168.20.11:500/candidate/';
   recruitment = new BehaviorSubject<any>({});
   selected_recruitment = this.recruitment.asObservable();
 
