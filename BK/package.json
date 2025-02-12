@@ -13,7 +13,7 @@
     "@koa/multer": "^2.0.0",
     "gridfs-stream": "^1.1.1",
     "i": "^0.3.6",
-    "koa": "2.7.0",
+    "koa": "2.15.4",
     "koa-body": "^4.1.1",
     "koa-bodyparser": "4.2.1",
     "koa-cors": "0.0.16",
